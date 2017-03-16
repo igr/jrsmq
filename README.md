@@ -1,5 +1,3 @@
-# jrsmq
-
 ![RSMQ: Redis Simple Message Queue for Node.js](https://img.webmart.de/rsmq_wide.png)
 
 # Redis Simple Message Queue
