@@ -1,0 +1,23 @@
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.oblac'
+version = 1.0
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "redis.clients:jedis:2.9.0"
+    testCompile "junit:junit:4.12"
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.4.1'
+}
