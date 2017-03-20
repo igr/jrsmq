@@ -129,7 +129,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Disconnects from Redis.
+	 * Disconnects the redis client.
 	 */
 	public void quit() {
 		try {
