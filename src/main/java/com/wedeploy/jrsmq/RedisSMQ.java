@@ -88,12 +88,16 @@ public class RedisSMQ {
 		return new GetQueueAttributesCmd(config, jedis);
 	}
 
+	/**
+	 * Sets queue parameters.
+	 * @see SetQueueAttributesCmd
+	 */
 	public SetQueueAttributesCmd setQueueAttributes() {
 		return new SetQueueAttributesCmd(config, jedis);
 	}
 
 	/**
-	 * Lists queues.
+	 * Lists all queues.
 	 * @see ListQueuesCmd
 	 */
 	public ListQueuesCmd listQueues() {
@@ -101,7 +105,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Pops message from a queue.
+	 * Receives the next message from the queue and <b>deletes</b> it.
 	 * @see PopMessageCmd
 	 */
 	public PopMessageCmd popMessage() {
@@ -109,7 +113,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Receives a message.
+	 * Receives the next message from the queue.
 	 * @see ReceiveMessageCmd
 	 */
 	public ReceiveMessageCmd receiveMessage() {
@@ -117,7 +121,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Sends a message to a queue.
+	 * Sends a new message.
 	 * @see SendMessageCmd
 	 */
 	public SendMessageCmd sendMessage() {

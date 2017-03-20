@@ -15,22 +15,37 @@ public class QueueMessage {
 		this.sent = sent;
 	}
 
+	/**
+	 * The internal message id.
+	 */
 	public String id() {
 		return id;
 	}
 
+	/**
+	 * The message's contents.
+	 */
 	public String message() {
 		return message;
 	}
 
+	/**
+	 * Number of times this message was received.
+	 */
 	public long rc() {
 		return rc;
 	}
 
+	/**
+	 * Timestamp of when this message was first received.
+	 */
 	public long fr() {
 		return fr;
 	}
 
+	/**
+	 * Timestamp of when this message was sent / created.
+	 */
 	public long sent() {
 		return sent;
 	}

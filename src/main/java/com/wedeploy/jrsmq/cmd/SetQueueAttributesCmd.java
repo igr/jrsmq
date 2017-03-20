@@ -10,6 +10,11 @@ import java.util.List;
 
 import static com.wedeploy.jrsmq.Names.Q;
 
+/**
+ * Set queue parameters.
+ * Note: At least one attribute (vt, delay, maxsize) must be supplied.
+ * Only attributes that are supplied will be modified.
+ */
 public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 
 	private String qname;
@@ -23,27 +28,45 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 		this.getQueueAttributes = new GetQueueAttributesCmd(config, jedis);
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public SetQueueAttributesCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * Optional length of time, in seconds, that a message received from a queue
+	 * will be invisible to other receiving components when they ask to receive messages.
+	 * Allowed values: 0-9999999 (around 115 days)
+	 */
 	public SetQueueAttributesCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}
 
+	/**
+	 * Optional maximum message size in bytes. Allowed values: 1024-65536 and -1 (for unlimited size).
+	 */
 	public SetQueueAttributesCmd maxsize(int maxSize) {
 		this.maxSize = maxSize;
 		return this;
 	}
 
+	/**
+	 * Optional The time in seconds that the delivery of all new messages in
+	 * the queue will be delayed. Allowed values: 0-9999999 (around 115 days).
+	 */
 	public SetQueueAttributesCmd delay(int delay) {
 		this.delay = delay;
 		return this;
 	}
 
 
+	/**
+	 * @return {@link QueueAttributes}.
+	 */
 	@Override
 	public QueueAttributes execute() {
 		Validator.create().assertValidQname(qname);

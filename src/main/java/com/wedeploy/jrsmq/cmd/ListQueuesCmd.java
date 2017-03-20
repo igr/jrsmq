@@ -7,6 +7,9 @@ import java.util.Set;
 
 import static com.wedeploy.jrsmq.Names.QUEUES;
 
+/**
+ * List all queues.
+ */
 public class ListQueuesCmd implements Cmd<Set<String>> {
 
 	private final RedisSMQConfig config;
@@ -17,6 +20,9 @@ public class ListQueuesCmd implements Cmd<Set<String>> {
 		this.jedis = jedis;
 	}
 
+	/**
+	 * @return collection of all queue names.
+	 */
 	@Override
 	public Set<String> execute() {
 		return jedis.smembers(config.redisNs() + QUEUES);

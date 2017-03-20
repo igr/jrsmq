@@ -9,6 +9,9 @@ import redis.clients.jedis.Transaction;
 import static com.wedeploy.jrsmq.Names.Q;
 import static com.wedeploy.jrsmq.Names.TOTALSENT;
 
+/**
+ * Send a new message.
+ */
 public class SendMessageCmd extends BaseQueueCmd<String> {
 
 	private String qname;
@@ -19,21 +22,34 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 		super(config, jedis);
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public SendMessageCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * The message's contents.
+	 */
 	public SendMessageCmd message(String message) {
 		this.message = message;
 		return this;
 	}
 
+	/**
+	 * Optional (Default: queue settings) time in seconds that the delivery of
+	 * the message will be delayed. Allowed values: 0-9999999 (around 115 days)
+	 */
 	public SendMessageCmd delay(int delay) {
 		this.delay = delay;
 		return this;
 	}
 
+	/**
+	 * @return The internal message id.
+	 */
 	@Override
 	public String execute() {
 		QueueDef q = getQueue(qname, true);
