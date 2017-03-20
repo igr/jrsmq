@@ -95,7 +95,7 @@ public class SendReceiveDeleteMessageCmdTest {
 		assertEquals(1, msg2.rc());
 		assertEquals(id2, msg2.id());
 
-		assertTrue(msg1.sent() < msg2.sent());
+		assertTrue(msg1.sent() <= msg2.sent());
 
 		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
