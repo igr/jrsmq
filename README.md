@@ -16,26 +16,26 @@ library. We decided to add one to make the usage lifecycle bit more flexible.
 
 ## Example
 
-		RedisSMQ rsmq = new RedisSMQ();
+    RedisSMQ rsmq = new RedisSMQ();
 
-		rsmq.connect()
-			.createQueue()
-			.qname("myqueue")
-			.execute();
+    rsmq.connect()
+        .createQueue()
+        .qname("myqueue")
+        .execute();
 
-		String id = rsmq.sendMessage()
-						.qname("myqueue")
-						.message("Hello World")
-						.execute();
-	
-		QueueMessage msg = rsmq.receiveMessage()
-								.qname("myqueue")
-								.execute();
+    String id = rsmq.sendMessage()
+                    .qname("myqueue")
+                    .message("Hello World")
+                    .execute();
 
-		rsmq.deleteQueue()
-			.qname("myqueue")
-			.execute();
-			
-		rsmq.quit();
+    QueueMessage msg = rsmq.receiveMessage()
+                            .qname("myqueue")
+                            .execute();
+
+    rsmq.deleteQueue()
+        .qname("myqueue")
+        .execute();
+        
+    rsmq.quit();
 
 Enjoy!
