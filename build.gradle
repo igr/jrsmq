@@ -5,9 +5,9 @@ repositories {
 }
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-group = 'com.oblac'
+group = 'com.wedeploy'
 version = 1.0
 
 sourceCompatibility = 1.8
@@ -16,6 +16,28 @@ targetCompatibility = 1.8
 dependencies {
     compile "redis.clients:jedis:2.9.0"
     testCompile "junit:junit:4.12"
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+javadoc {
+    failOnError = false
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar
+            artifact javadocJar
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {
