@@ -3,9 +3,11 @@ package com.wedeploy.jrsmq;
 import com.wedeploy.jrsmq.cmd.CreateQueueCmd;
 import com.wedeploy.jrsmq.cmd.DeleteMessageCmd;
 import com.wedeploy.jrsmq.cmd.DeleteQueueCmd;
+import com.wedeploy.jrsmq.cmd.GetQueueAttributesCmd;
 import com.wedeploy.jrsmq.cmd.ListQueuesCmd;
 import com.wedeploy.jrsmq.cmd.ReceiveMessageCmd;
 import com.wedeploy.jrsmq.cmd.SendMessageCmd;
+import com.wedeploy.jrsmq.cmd.SetQueueAttributesCmd;
 import redis.clients.jedis.Jedis;
 
 public class RedisSMQ {
@@ -19,7 +21,7 @@ public class RedisSMQ {
 
 	public RedisSMQ(RedisSMQConfig config) {
 		this.config = config;
-		this.jedis = new Jedis(config.getHost(), config.getPort());
+		this.jedis = new Jedis(config.host(), config.port());
 	}
 
 	// ---------------------------------------------------------------- connect
@@ -67,6 +69,18 @@ public class RedisSMQ {
 	 */
 	public DeleteMessageCmd deleteMessage() {
 		return new DeleteMessageCmd(config, jedis);
+	}
+
+	/**
+	 * Returns queue attributes.
+	 * @see GetQueueAttributesCmd
+	 */
+	public GetQueueAttributesCmd getQueueAttributes() {
+		return new GetQueueAttributesCmd(config, jedis);
+	}
+
+	public SetQueueAttributesCmd setQueueAttributes() {
+		return new SetQueueAttributesCmd(config, jedis);
 	}
 
 	/**

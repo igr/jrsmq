@@ -12,7 +12,7 @@ import static com.wedeploy.jrsmq.Names.Q;
 import static com.wedeploy.jrsmq.Names.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
 
-public class CreateQueueCmd implements Cmd<Void> {
+public class CreateQueueCmd implements Cmd<Integer> {
 
 	private final Jedis jedis;
 	private final RedisSMQConfig config;
@@ -26,28 +26,28 @@ public class CreateQueueCmd implements Cmd<Void> {
 		this.jedis = jedis;
 	}
 
-	public CreateQueueCmd withName(String qname) {
+	public CreateQueueCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
-	public CreateQueueCmd withVt(long vt) {
+	public CreateQueueCmd vt(long vt) {
 		this.vt = vt;
 		return this;
 	}
 
-	public CreateQueueCmd withDelay(int delay) {
+	public CreateQueueCmd delay(int delay) {
 		this.delay = delay;
 		return this;
 	}
 
-	public CreateQueueCmd withMaxSize(int maxsize) {
+	public CreateQueueCmd maxSize(int maxsize) {
 		this.maxsize = maxsize;
 		return this;
 	}
 
 	@Override
-	public Void execute() {
+	public Integer execute() {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertValidVt(vt)
@@ -58,7 +58,7 @@ public class CreateQueueCmd implements Cmd<Void> {
 
 		Transaction tx = jedis.multi();
 
-		String key = config.getRedisNs() + qname + Q;
+		String key = config.redisNs() + qname + Q;
 
 		tx.hsetnx(key, "vt", String.valueOf(vt));
 		tx.hsetnx(key, "delay", String.valueOf(delay));
@@ -68,12 +68,14 @@ public class CreateQueueCmd implements Cmd<Void> {
 
 		List results = tx.exec();
 
-		if (toInt(results, 0) == 0) {
+		int createdCount = toInt(results, 0);
+
+		if (createdCount == 0) {
 			throw new RedisSMQException("Queue already exists: " + qname);
 		}
 
-		jedis.sadd(config.getRedisNs() + QUEUES, qname);
+		jedis.sadd(config.redisNs() + QUEUES, qname);
 
-		return null;
+		return createdCount;
 	}
 }

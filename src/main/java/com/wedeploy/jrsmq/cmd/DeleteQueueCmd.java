@@ -23,7 +23,7 @@ public class DeleteQueueCmd implements Cmd<Void> {
 		this.jedis = jedis;
 	}
 
-	public DeleteQueueCmd withName(String qname) {
+	public DeleteQueueCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
@@ -33,13 +33,13 @@ public class DeleteQueueCmd implements Cmd<Void> {
 		Validator.create()
 			.assertValidQname(qname);
 
-		String key = config.getRedisNs() + qname;
+		String key = config.redisNs() + qname;
 
 		Transaction tx = jedis.multi();
 
 		tx.del(key + Names.Q);
 		tx.del(key);
-		tx.srem(config.getRedisNs() + QUEUES, qname);
+		tx.srem(config.redisNs() + QUEUES, qname);
 
 		List result = tx.exec();
 

@@ -19,6 +19,6 @@ public class ListQueuesCmd implements Cmd<Set<String>> {
 
 	@Override
 	public Set<String> execute() {
-		return jedis.smembers(config.getRedisNs() + QUEUES);
+		return jedis.smembers(config.redisNs() + QUEUES);
 	}
 }

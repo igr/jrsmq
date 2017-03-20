@@ -11,9 +11,9 @@ public class RedisSMQConfig {
 	private String redisns;
 
 	public RedisSMQConfig() {
-		setHost("localhost");
-		setPort(6379);
-		setNs("rsmq");
+		host("localhost");
+		port(6379);
+		ns("rsmq");
 	}
 
 	/**
@@ -23,26 +23,26 @@ public class RedisSMQConfig {
 		return new RedisSMQConfig();
 	}
 
-	public String getHost() {
+	public String host() {
 		return host;
 	}
 
 	/**
 	 * Sets redis server host address.
 	 */
-	public RedisSMQConfig setHost(String host) {
+	public RedisSMQConfig host(String host) {
 		this.host = host;
 		return this;
 	}
 
-	public int getPort() {
+	public int port() {
 		return port;
 	}
 
 	/**
 	 * Sets redis server port.
 	 */
-	public RedisSMQConfig setPort(int port) {
+	public RedisSMQConfig port(int port) {
 		this.port = port;
 		return this;
 	}
@@ -50,21 +50,21 @@ public class RedisSMQConfig {
 	/**
 	 * Returns name space.
 	 */
-	public String getNs() {
+	public String ns() {
 		return ns;
 	}
 
 	/**
 	 * Returns redis name space.
 	 */
-	public String getRedisNs() {
+	public String redisNs() {
 		return redisns;
 	}
 
 	/**
-	 * Sets name space value used for {@link #getRedisNs()}.
+	 * Sets name space value used for {@link #redisNs()}.
 	 */
-	public RedisSMQConfig setNs(String ns) {
+	public RedisSMQConfig ns(String ns) {
 		this.ns = ns;
 		this.redisns = ns + ':';
 		return this;

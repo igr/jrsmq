@@ -19,17 +19,17 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 		super(config, jedis);
 	}
 
-	public SendMessageCmd toQueue(String qname) {
+	public SendMessageCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
-	public SendMessageCmd withMessage(String message) {
+	public SendMessageCmd message(String message) {
 		this.message = message;
 		return this;
 	}
 
-	public SendMessageCmd withDelay(int delay) {
+	public SendMessageCmd delay(int delay) {
 		this.delay = delay;
 		return this;
 	}
@@ -45,9 +45,9 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 
 		Transaction tx = jedis.multi();
 
-		String key = config.getRedisNs() + qname + Q;
+		String key = config.redisNs() + qname + Q;
 
-		tx.zadd(config.getRedisNs() + qname, q.ts() + delay * 1000, q.uid());
+		tx.zadd(config.redisNs() + qname, q.ts() + delay * 1000, q.uid());
 		tx.hset(key, q.uid(), message);
 		tx.hincrBy(key, TOTALSENT, 1);
 

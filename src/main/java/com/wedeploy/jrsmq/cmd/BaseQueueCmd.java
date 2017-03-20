@@ -27,7 +27,7 @@ public abstract class BaseQueueCmd<T> implements Cmd<T> {
 	protected QueueDef getQueue(String qname, boolean generateUid) {
 		Transaction tx = jedis.multi();
 
-		String key = config.getRedisNs() + qname + Q;
+		String key = config.redisNs() + qname + Q;
 
 		tx.hmget(key, "vt", "delay", "maxsize");
 		tx.time();

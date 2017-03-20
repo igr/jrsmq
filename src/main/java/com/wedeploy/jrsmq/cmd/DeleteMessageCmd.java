@@ -24,12 +24,12 @@ public class DeleteMessageCmd implements Cmd<Boolean> {
 		this.jedis = jedis;
 	}
 
-	public DeleteMessageCmd onQueue(String name) {
+	public DeleteMessageCmd qname(String name) {
 		this.name = name;
 		return this;
 	}
 
-	public DeleteMessageCmd withId(String id) {
+	public DeleteMessageCmd id(String id) {
 		this.id = id;
 		return this;
 	}
@@ -40,7 +40,7 @@ public class DeleteMessageCmd implements Cmd<Boolean> {
 			.assertValidQname(name)
 			.assertValidId(id);
 
-		String key = config.getRedisNs() + name;
+		String key = config.redisNs() + name;
 
 		Transaction tx = jedis.multi();
 

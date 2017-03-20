@@ -19,12 +19,12 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 		this.receiveMessageSha1 = receiveMessageSha1;
 	}
 
-	public ReceiveMessageCmd fromQueue(String name) {
+	public ReceiveMessageCmd qname(String name) {
 		this.name = name;
 		return this;
 	}
 
-	public ReceiveMessageCmd withVt(int vt) {
+	public ReceiveMessageCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}
@@ -44,7 +44,7 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 
 		@SuppressWarnings("unchecked")
 		List result = (List<String>) jedis.evalsha(
-			receiveMessageSha1, 3, config.getRedisNs() + name, String.valueOf(q.ts()), String.valueOf(q.ts() + vt * 1000));
+			receiveMessageSha1, 3, config.redisNs() + name, String.valueOf(q.ts()), String.valueOf(q.ts() + vt * 1000));
 
 		if (result.isEmpty()) {
 			return null;

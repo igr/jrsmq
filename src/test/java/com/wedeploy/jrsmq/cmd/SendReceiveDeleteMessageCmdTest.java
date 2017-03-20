@@ -16,18 +16,18 @@ public class SendReceiveDeleteMessageCmdTest {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 		String qname = "testqueue";
 
-		rsmq.connect().createQueue().withName(qname).execute();
+		rsmq.connect().createQueue().qname(qname).execute();
 
-		String id = rsmq.sendMessage().toQueue(qname).withMessage("Hello World").execute();
+		String id = rsmq.sendMessage().qname(qname).message("Hello World").execute();
 		assertNotNull(id);
 
-		boolean deleted = rsmq.deleteMessage().onQueue(qname).withId(id).execute();
+		boolean deleted = rsmq.deleteMessage().qname(qname).id(id).execute();
 		assertTrue(deleted);
 
-		QueueMessage msg = rsmq.receiveMessage().fromQueue(qname).execute();
+		QueueMessage msg = rsmq.receiveMessage().qname(qname).execute();
 		assertNull(msg);
 
-		rsmq.deleteQueue().withName(qname).execute();
+		rsmq.deleteQueue().qname(qname).execute();
 		rsmq.quit();
 	}
 
@@ -36,19 +36,19 @@ public class SendReceiveDeleteMessageCmdTest {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 		String qname = "testqueue";
 
-		rsmq.connect().createQueue().withName(qname).execute();
+		rsmq.connect().createQueue().qname(qname).execute();
 
-		String id = rsmq.sendMessage().toQueue(qname).withMessage("Hello World").execute();
+		String id = rsmq.sendMessage().qname(qname).message("Hello World").execute();
 		assertNotNull(id);
 
-		QueueMessage msg = rsmq.receiveMessage().fromQueue(qname).execute();
+		QueueMessage msg = rsmq.receiveMessage().qname(qname).execute();
 		assertNotNull(msg);
 
 		assertEquals("Hello World", msg.message());
 		assertEquals(1, msg.rc());
 		assertEquals(id, msg.id());
 
-		rsmq.deleteQueue().withName(qname).execute();
+		rsmq.deleteQueue().qname(qname).execute();
 		rsmq.quit();
 	}
 
@@ -57,21 +57,21 @@ public class SendReceiveDeleteMessageCmdTest {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 		String qname = "testqueue";
 
-		rsmq.connect().createQueue().withName(qname).execute();
+		rsmq.connect().createQueue().qname(qname).execute();
 
-		String id1 = rsmq.sendMessage().toQueue(qname).withMessage("Hello World 1").execute();
+		String id1 = rsmq.sendMessage().qname(qname).message("Hello World 1").execute();
 		assertNotNull(id1);
-		String id2 = rsmq.sendMessage().toQueue(qname).withMessage("Hello World 2").execute();
+		String id2 = rsmq.sendMessage().qname(qname).message("Hello World 2").execute();
 		assertNotNull(id2);
 
-		QueueMessage msg1 = rsmq.receiveMessage().fromQueue(qname).execute();
+		QueueMessage msg1 = rsmq.receiveMessage().qname(qname).execute();
 		assertNotNull(msg1);
 
 		assertEquals("Hello World 1", msg1.message());
 		assertEquals(1, msg1.rc());
 		assertEquals(id1, msg1.id());
 
-		QueueMessage msg2 = rsmq.receiveMessage().fromQueue(qname).execute();
+		QueueMessage msg2 = rsmq.receiveMessage().qname(qname).execute();
 		assertNotNull(msg2);
 
 		assertEquals("Hello World 2", msg2.message());
@@ -80,7 +80,7 @@ public class SendReceiveDeleteMessageCmdTest {
 
 		assertTrue(msg1.sent() < msg2.sent());
 
-		rsmq.deleteQueue().withName(qname).execute();
+		rsmq.deleteQueue().qname(qname).execute();
 		rsmq.quit();
 	}
 
@@ -89,12 +89,12 @@ public class SendReceiveDeleteMessageCmdTest {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 		String qname = "testqueue";
 
-		rsmq.connect().createQueue().withName(qname).execute();
+		rsmq.connect().createQueue().qname(qname).execute();
 
-		QueueMessage msg = rsmq.receiveMessage().fromQueue(qname).execute();
+		QueueMessage msg = rsmq.receiveMessage().qname(qname).execute();
 		assertNull(msg);
 
-		rsmq.deleteQueue().withName(qname).execute();
+		rsmq.deleteQueue().qname(qname).execute();
 		rsmq.quit();
 	}
 

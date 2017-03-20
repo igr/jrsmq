@@ -9,7 +9,7 @@ public class Fixtures {
 	 * Returns test configuration.
 	 */
 	public static RedisSMQConfig testConfig() {
-		return new RedisSMQConfig().setNs("trsmq");
+		return new RedisSMQConfig().ns("trsmq");
 	}
 
 	public static TestRedisSMQ redisSMQ() {

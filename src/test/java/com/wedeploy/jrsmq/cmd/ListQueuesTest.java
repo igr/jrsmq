@@ -24,7 +24,7 @@ public class ListQueuesTest {
 	@Test
 	public void testListQueues() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
-		rsmq.connect().createQueue().withName("one").execute();
+		rsmq.connect().createQueue().qname("one").execute();
 
 		Set<String> queues = rsmq.listQueues().execute();
 		assertEquals(1, queues.size());
@@ -32,7 +32,7 @@ public class ListQueuesTest {
 		String name = queues.iterator().next();
 		assertEquals("one", name);
 
-		rsmq.deleteQueue().withName("one").execute();
+		rsmq.deleteQueue().qname("one").execute();
 		rsmq.quit();
 	}
 
