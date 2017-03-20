@@ -57,7 +57,7 @@ public class RedisSMQ {
 		return new ChangeMessageVisibilityCmd(config, jedis, changeMessageVisibility);
 	}
 	/**
-	 * Creates a queue.
+	 * Creates a new queue.
 	 * @see CreateQueueCmd
 	 */
 	public CreateQueueCmd createQueue() {

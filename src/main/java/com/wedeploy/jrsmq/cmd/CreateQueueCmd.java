@@ -12,6 +12,9 @@ import static com.wedeploy.jrsmq.Names.Q;
 import static com.wedeploy.jrsmq.Names.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
 
+/**
+ * Create a new queue.
+ */
 public class CreateQueueCmd implements Cmd<Integer> {
 
 	private final Jedis jedis;
@@ -26,26 +29,43 @@ public class CreateQueueCmd implements Cmd<Integer> {
 		this.jedis = jedis;
 	}
 
+	/**
+	 * The Queue name. Maximum 160 characters; alphanumeric characters, hyphens (-), and underscores (_) are allowed.
+	 */
 	public CreateQueueCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * Optional (Default: 30) length of time, in seconds, that a message received from a
+	 * queue will be invisible to other receiving components when they ask to receive messages. Allowed values: 0-9999999 (around 115 days).
+	 */
 	public CreateQueueCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}
 
+	/**
+	 * Optional (Default: 0) time in seconds that the delivery of all new messages in the queue will be delayed.
+	 * Allowed values: 0-9999999 (around 115 days)
+	 */
 	public CreateQueueCmd delay(int delay) {
 		this.delay = delay;
 		return this;
 	}
 
-	public CreateQueueCmd maxSize(int maxsize) {
+	/**
+	 * Optional (Default: 65536) maximum message size in bytes. Allowed values: 1024-65536 and -1 (for unlimited size).
+	 */
+	public CreateQueueCmd maxsize(int maxsize) {
 		this.maxsize = maxsize;
 		return this;
 	}
 
+	/**
+	 * @return 1
+	 */
 	@Override
 	public Integer execute() {
 		Validator.create()

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.wedeploy.jrsmq.Fixtures.TEST_QNAME;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class CreateGetDeleteQueueCmdTest {
@@ -22,7 +23,9 @@ public class CreateGetDeleteQueueCmdTest {
 	public void testCreateQueue() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		int result = rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+
+		assertEquals(1, result);
 
 		QueueDef queueDef = Fixtures.getQueue(rsmq, TEST_QNAME);
 

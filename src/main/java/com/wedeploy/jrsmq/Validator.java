@@ -24,8 +24,11 @@ public class Validator {
 	}
 
 	public Validator assertValidMaxSize(int maxsize) {
+		if (maxsize == -1) {
+			return this;
+		}
 		if (maxsize < 1024 || maxsize > 65536) {
-			throw validationException(maxsize, "is out of range [1024, 65536].");
+			throw validationException(maxsize, "is out of range [1024, 65536] and not -1.");
 		}
 
 		return this;
