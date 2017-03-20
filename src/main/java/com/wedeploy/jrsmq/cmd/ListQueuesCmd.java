@@ -24,7 +24,7 @@ public class ListQueuesCmd implements Cmd<Set<String>> {
 	 * @return collection of all queue names.
 	 */
 	@Override
-	public Set<String> execute() {
+	public Set<String> exec() {
 		return jedis.smembers(config.redisNs() + QUEUES);
 	}
 }

@@ -36,7 +36,7 @@ public class PopMessageCmd extends BaseQueueCmd<QueueMessage> {
 	 * @return {@link QueueMessage} or {@code null} if no message is there.
 	 */
 	@Override
-	public QueueMessage execute() {
+	public QueueMessage exec() {
 		Validator.create().assertValidQname(qname);
 
 		QueueDef q = getQueue(qname, false);

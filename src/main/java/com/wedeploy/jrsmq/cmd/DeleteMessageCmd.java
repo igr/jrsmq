@@ -45,7 +45,7 @@ public class DeleteMessageCmd implements Cmd<Integer> {
 	 * 1 if successful, 0 if the message was not found.
 	 */
 	@Override
-	public Integer execute() {
+	public Integer exec() {
 		Validator.create()
 			.assertValidQname(name)
 			.assertValidId(id);

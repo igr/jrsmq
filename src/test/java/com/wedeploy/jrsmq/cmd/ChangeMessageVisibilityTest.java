@@ -20,15 +20,15 @@ public class ChangeMessageVisibilityTest {
 	public void testChangeMessageVisibility_noMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
-		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(Fixtures.NONEXISTING_ID).execute();
+		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(Fixtures.NONEXISTING_ID).exec();
 
 		assertEquals(0, result);
 
 		// clean up
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 
@@ -36,21 +36,21 @@ public class ChangeMessageVisibilityTest {
 	public void testChangeMessageVisibility() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
-		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").execute();
+		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").exec();
 
-		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(id).vt(10000).execute();
+		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(id).vt(10000).exec();
 
 		assertEquals(1, result);
 
-		QueueMessage queueMessage = rsmq.receiveMessage().qname(TEST_QNAME).execute();
+		QueueMessage queueMessage = rsmq.receiveMessage().qname(TEST_QNAME).exec();
 
 		assertNull(queueMessage);	// message is not visible any more.
 
 		// clean up
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 }

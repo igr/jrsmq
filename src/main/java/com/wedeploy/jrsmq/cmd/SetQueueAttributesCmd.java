@@ -68,7 +68,7 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 	 * @return {@link QueueAttributes}.
 	 */
 	@Override
-	public QueueAttributes execute() {
+	public QueueAttributes exec() {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertAtLeastOneSet(vt, maxSize, delay);
@@ -100,6 +100,6 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 
 		tx.exec();
 
-		return getQueueAttributes.qname(qname).execute();
+		return getQueueAttributes.qname(qname).exec();
 	}
 }

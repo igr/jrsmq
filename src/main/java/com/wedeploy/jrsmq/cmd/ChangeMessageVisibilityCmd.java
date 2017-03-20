@@ -50,7 +50,7 @@ public class ChangeMessageVisibilityCmd extends BaseQueueCmd<Integer> {
 	 * @return 1 if successful, 0 if the message was not found.
 	 */
 	@Override
-	public Integer execute() {
+	public Integer exec() {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertValidVt(vt)

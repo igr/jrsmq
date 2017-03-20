@@ -22,13 +22,13 @@ public class QueueAttributesTest {
 	public void testGetQueueAttributes() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
-		rsmq.sendMessage().qname(TEST_QNAME).message("Hello1").execute();
-		rsmq.receiveMessage().qname(TEST_QNAME).execute();
-		rsmq.sendMessage().qname(TEST_QNAME).message("Hello2").execute();
+		rsmq.sendMessage().qname(TEST_QNAME).message("Hello1").exec();
+		rsmq.receiveMessage().qname(TEST_QNAME).exec();
+		rsmq.sendMessage().qname(TEST_QNAME).message("Hello2").exec();
 
-		QueueAttributes qa = rsmq.getQueueAttributes().qname(TEST_QNAME).execute();
+		QueueAttributes qa = rsmq.getQueueAttributes().qname(TEST_QNAME).exec();
 
 		assertNotNull(qa);
 		assertEquals(0, qa.delay());
@@ -39,7 +39,7 @@ public class QueueAttributesTest {
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 
@@ -47,16 +47,16 @@ public class QueueAttributesTest {
 	public void testSetQueueAttributes_noChange() throws InterruptedException {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
 		try {
-			rsmq.setQueueAttributes().qname(TEST_QNAME).execute();
+			rsmq.setQueueAttributes().qname(TEST_QNAME).exec();
 			fail();
 		}
 		catch (Exception ignore) {}
 		// cleanup
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 
@@ -64,18 +64,18 @@ public class QueueAttributesTest {
 	public void testSetQueueAttributes() throws InterruptedException {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
 		Thread.sleep(1000);
 
-		QueueAttributes qa = rsmq.setQueueAttributes().qname(TEST_QNAME).delay(100).execute();
+		QueueAttributes qa = rsmq.setQueueAttributes().qname(TEST_QNAME).delay(100).exec();
 
 		assertEquals(100, qa.delay());
 		assertTrue(qa.modified() > qa.created());
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 }

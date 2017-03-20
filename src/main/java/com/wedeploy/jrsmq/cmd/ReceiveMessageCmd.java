@@ -45,7 +45,7 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 	 * @return {@link QueueMessage} or {@code null} if message is not there.
 	 */
 	@Override
-	public QueueMessage execute() {
+	public QueueMessage exec() {
 		Validator.create()
 			.assertValidQname(name);
 

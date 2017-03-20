@@ -50,7 +50,7 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 	 * @return The internal message id.
 	 */
 	@Override
-	public String execute() {
+	public String exec() {
 		QueueDef q = getQueue(qname, true);
 
 		Validator.create()

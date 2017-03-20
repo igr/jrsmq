@@ -23,7 +23,7 @@ public class CreateGetDeleteQueueCmdTest {
 	public void testCreateQueue() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		int result = rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		int result = rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
 		assertEquals(1, result);
 
@@ -34,7 +34,7 @@ public class CreateGetDeleteQueueCmdTest {
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 
@@ -42,10 +42,10 @@ public class CreateGetDeleteQueueCmdTest {
 	public void testCreateQueue_existingName() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 
 		try {
-			rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+			rsmq.connect().createQueue().qname(TEST_QNAME).exec();
 			fail();
 		}
 		catch (RedisSMQException e) {
@@ -54,7 +54,7 @@ public class CreateGetDeleteQueueCmdTest {
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		rsmq.quit();
 	}
 
@@ -63,7 +63,7 @@ public class CreateGetDeleteQueueCmdTest {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
 		try {
-			rsmq.connect().deleteQueue().qname("nonexistingqueue").execute();
+			rsmq.connect().deleteQueue().qname("nonexistingqueue").exec();
 			fail();
 		}
 		catch (Exception ex) {

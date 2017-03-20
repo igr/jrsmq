@@ -38,7 +38,7 @@ public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
 	 * @return {@link QueueAttributes}
 	 */
 	@Override
-	public QueueAttributes execute() {
+	public QueueAttributes exec() {
 		Validator.create().assertValidQname(qname);
 
 		List<String> times = jedis.time();

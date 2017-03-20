@@ -38,7 +38,7 @@ public class DeleteQueueCmd implements Cmd<Integer> {
 	 * @return 1
 	 */
 	@Override
-	public Integer execute() {
+	public Integer exec() {
 		Validator.create()
 			.assertValidQname(qname);
 

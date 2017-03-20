@@ -26,15 +26,15 @@ library. We decided to add one to make the usage lifecycle bit more flexible.
     String id = rsmq.sendMessage()
                     .qname("myqueue")
                     .message("Hello World")
-                    .execute();
+                    .exec();
 
     QueueMessage msg = rsmq.receiveMessage()
                             .qname("myqueue")
-                            .execute();
+                            .exec();
 
     rsmq.deleteQueue()
         .qname("myqueue")
-        .execute();
+        .exec();
         
     rsmq.quit();
 
