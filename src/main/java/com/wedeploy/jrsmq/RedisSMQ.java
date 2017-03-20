@@ -81,7 +81,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Returns queue attributes.
+	 * Returns queue attributes, counter and stats.
 	 * @see GetQueueAttributesCmd
 	 */
 	public GetQueueAttributesCmd getQueueAttributes() {

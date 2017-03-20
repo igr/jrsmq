@@ -12,6 +12,9 @@ import java.util.List;
 
 import static com.wedeploy.jrsmq.Names.Q;
 
+/**
+ * Get queue attributes, counter and stats.
+ */
 public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
 
 	private final RedisSMQConfig config;
@@ -23,11 +26,17 @@ public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
 		this.jedis = jedis;
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public GetQueueAttributesCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * @return {@link QueueAttributes}
+	 */
 	@Override
 	public QueueAttributes execute() {
 		Validator.create().assertValidQname(qname);
