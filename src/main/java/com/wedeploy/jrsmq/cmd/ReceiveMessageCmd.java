@@ -43,19 +43,9 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 		Validator.create().assertValidVt(vt);
 
 		@SuppressWarnings("unchecked")
-		List result = (List<String>) jedis.evalsha(
+		List result = (List) jedis.evalsha(
 			receiveMessageSha1, 3, config.redisNs() + name, String.valueOf(q.ts()), String.valueOf(q.ts() + vt * 1000));
 
-		if (result.isEmpty()) {
-			return null;
-		}
-
-		return new QueueMessage(
-			(String) result.get(0),
-			(String) result.get(1),
-			(Long) result.get(2),
-			Long.parseLong((String)result.get(3)),
-			Long.valueOf(((String)result.get(0)).substring(0, 10), 36) / 1000
-		);
+		return createQueueMessage(result);
 	}
 }

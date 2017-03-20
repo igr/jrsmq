@@ -5,6 +5,7 @@ import com.wedeploy.jrsmq.cmd.DeleteMessageCmd;
 import com.wedeploy.jrsmq.cmd.DeleteQueueCmd;
 import com.wedeploy.jrsmq.cmd.GetQueueAttributesCmd;
 import com.wedeploy.jrsmq.cmd.ListQueuesCmd;
+import com.wedeploy.jrsmq.cmd.PopMessageCmd;
 import com.wedeploy.jrsmq.cmd.ReceiveMessageCmd;
 import com.wedeploy.jrsmq.cmd.SendMessageCmd;
 import com.wedeploy.jrsmq.cmd.SetQueueAttributesCmd;
@@ -89,6 +90,14 @@ public class RedisSMQ {
 	 */
 	public ListQueuesCmd listQueues() {
 		return new ListQueuesCmd(config, jedis);
+	}
+
+	/**
+	 * Pops message from a queue.
+	 * @see PopMessageCmd
+	 */
+	public PopMessageCmd popMessage() {
+		return new PopMessageCmd(config, jedis, popMessageSha1);
 	}
 
 	/**

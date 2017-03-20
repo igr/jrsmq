@@ -1,6 +1,7 @@
 package com.wedeploy.jrsmq.cmd;
 
 import com.wedeploy.jrsmq.QueueDef;
+import com.wedeploy.jrsmq.QueueMessage;
 import com.wedeploy.jrsmq.RedisSMQConfig;
 import com.wedeploy.jrsmq.RedisSMQException;
 import com.wedeploy.jrsmq.Util;
@@ -56,4 +57,20 @@ public abstract class BaseQueueCmd<T> implements Cmd<T> {
 		return new QueueDef(qname, respGet.get(0), respGet.get(1), respGet.get(2), ts, id);
 	}
 
+	/**
+	 * Creates a queue message from resulting list.
+	 */
+	protected QueueMessage createQueueMessage(List result) {
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		return new QueueMessage(
+			(String) result.get(0),
+			(String) result.get(1),
+			(Long) result.get(2),
+			Long.parseLong((String)result.get(3)),
+			Long.valueOf(((String)result.get(0)).substring(0, 10), 36) / 1000
+		);
+	}
 }
