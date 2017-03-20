@@ -5,39 +5,44 @@ import com.wedeploy.jrsmq.Fixtures.TestRedisSMQ;
 import com.wedeploy.jrsmq.QueueDef;
 import com.wedeploy.jrsmq.RedisSMQException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import static com.wedeploy.jrsmq.Fixtures.TEST_QNAME;
 import static org.junit.Assert.fail;
 
 public class CreateGetDeleteQueueCmdTest {
 
+	@Before
+	public void setUp() {
+		Fixtures.cleanup();
+	}
+
 	@Test
 	public void testCreateQueue() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
-		String qname = "testqueue";
 
-		rsmq.connect().createQueue().qname(qname).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
 
-		QueueDef queueDef = Fixtures.getQueue(rsmq, qname);
+		QueueDef queueDef = Fixtures.getQueue(rsmq, TEST_QNAME);
 
-		Assert.assertEquals(qname, queueDef.qname());
+		Assert.assertEquals(TEST_QNAME, queueDef.qname());
 		Assert.assertEquals(65536, queueDef.maxsize());
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(qname).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).execute();
 		rsmq.quit();
 	}
 
 	@Test
 	public void testCreateQueue_existingName() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
-		String qname = "testqueue";
 
-		rsmq.connect().createQueue().qname(qname).execute();
+		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
 
 		try {
-			rsmq.connect().createQueue().qname(qname).execute();
+			rsmq.connect().createQueue().qname(TEST_QNAME).execute();
 			fail();
 		}
 		catch (RedisSMQException e) {
@@ -46,7 +51,7 @@ public class CreateGetDeleteQueueCmdTest {
 
 		// cleanup
 
-		rsmq.deleteQueue().qname(qname).execute();
+		rsmq.deleteQueue().qname(TEST_QNAME).execute();
 		rsmq.quit();
 	}
 

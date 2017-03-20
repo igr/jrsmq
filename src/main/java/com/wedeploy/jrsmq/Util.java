@@ -51,4 +51,11 @@ public class Util {
 		}
 	}
 
+	public static Long safeParseLong(String string) {
+		if (string == null) {
+			return 0L;
+		}
+		return Long.parseLong(string);
+	}
+
 }

@@ -5,6 +5,20 @@ import redis.clients.jedis.Jedis;
 
 public class Fixtures {
 
+	public static final String TEST_QNAME = "testqueue";
+
+	public static void cleanup() {
+		TestRedisSMQ rsmq = Fixtures.redisSMQ();
+		try {
+			rsmq.connect().deleteQueue().qname(TEST_QNAME).execute();
+		}
+		catch (Exception ignore) {
+		}
+		finally {
+			rsmq.quit();
+		}
+	}
+
 	/**
 	 * Returns test configuration.
 	 */

@@ -15,12 +15,19 @@ rsmq.createQueue({qname:"myqueue"}, function (err, resp) {
                         console.log("Message sent. ID:", resp);
                         console.log("Receive messages...");
 
+                        rsmq.getQueueAttributes({qname:'myqueue'}, function(err, resp){
+                            console.log(resp);
+                        });
+
+                        /*
                         rsmq.receiveMessage({qname: "myqueue"}, function (err, resp) {
                             console.log(resp)
                             rsmq.receiveMessage({qname: "myqueue"}, function (err, resp) {
                                 console.log(resp)
                             });
                         });
+                        */
+
                     }
                 });
             }
