@@ -12,7 +12,10 @@ import static com.wedeploy.jrsmq.Names.Q;
 import static com.wedeploy.jrsmq.Names.RC;
 import static com.wedeploy.jrsmq.Util.toInt;
 
-public class DeleteMessageCmd implements Cmd<Boolean> {
+/**
+ * Delete a message.
+ */
+public class DeleteMessageCmd implements Cmd<Integer> {
 
 	private final RedisSMQConfig config;
 	private final Jedis jedis;
@@ -24,18 +27,27 @@ public class DeleteMessageCmd implements Cmd<Boolean> {
 		this.jedis = jedis;
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public DeleteMessageCmd qname(String name) {
 		this.name = name;
 		return this;
 	}
 
+	/**
+	 * Message id to delete.
+	 */
 	public DeleteMessageCmd id(String id) {
 		this.id = id;
 		return this;
 	}
 
+	/**
+	 * 1 if successful, 0 if the message was not found.
+	 */
 	@Override
-	public Boolean execute() {
+	public Integer execute() {
 		Validator.create()
 			.assertValidQname(name)
 			.assertValidId(id);
@@ -50,10 +62,9 @@ public class DeleteMessageCmd implements Cmd<Boolean> {
 		List result = tx.exec();
 
 		if (toInt(result, 0) == 1 && toInt(result, 1) > 0) {
-			return Boolean.TRUE;
+			return 1;
 		}
-		else {
-			return Boolean.FALSE;
-		}
+
+		return 0;
 	}
 }

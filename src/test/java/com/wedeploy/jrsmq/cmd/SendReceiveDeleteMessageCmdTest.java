@@ -27,11 +27,24 @@ public class SendReceiveDeleteMessageCmdTest {
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").execute();
 		assertNotNull(id);
 
-		boolean deleted = rsmq.deleteMessage().qname(TEST_QNAME).id(id).execute();
-		assertTrue(deleted);
+		int deleted = rsmq.deleteMessage().qname(TEST_QNAME).id(id).execute();
+		assertEquals(1, deleted);
 
 		QueueMessage msg = rsmq.receiveMessage().qname(TEST_QNAME).execute();
 		assertNull(msg);
+
+		rsmq.deleteQueue().qname(TEST_QNAME).execute();
+		rsmq.quit();
+	}
+
+	@Test
+	public void testDeleteMessage_noMessage() {
+		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
+
+		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
+
+		int deleted = rsmq.deleteMessage().qname(TEST_QNAME).id(Fixtures.NONEXISTING_ID).execute();
+		assertEquals(0, deleted);
 
 		rsmq.deleteQueue().qname(TEST_QNAME).execute();
 		rsmq.quit();
