@@ -7,7 +7,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import static com.wedeploy.jrsmq.Names.Q;
-import static com.wedeploy.jrsmq.Names.TOTALSENT;
 
 /**
  * Send a new message.
@@ -65,7 +64,7 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 
 		tx.zadd(config.redisNs() + qname, q.ts() + delay * 1000, q.uid());
 		tx.hset(key, q.uid(), message);
-		tx.hincrBy(key, TOTALSENT, 1);
+		tx.hincrBy(key, "totalsent", 1);
 
 		tx.exec();
 

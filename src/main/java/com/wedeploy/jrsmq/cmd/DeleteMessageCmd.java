@@ -7,9 +7,7 @@ import redis.clients.jedis.Transaction;
 
 import java.util.List;
 
-import static com.wedeploy.jrsmq.Names.FR;
 import static com.wedeploy.jrsmq.Names.Q;
-import static com.wedeploy.jrsmq.Names.RC;
 import static com.wedeploy.jrsmq.Util.toInt;
 
 /**
@@ -57,7 +55,7 @@ public class DeleteMessageCmd implements Cmd<Integer> {
 		Transaction tx = jedis.multi();
 
 		tx.zrem(key, id);
-		tx.hdel(key + Q, id, id + RC, id + FR);
+		tx.hdel(key + Q, id, id + ":rc", id + ":fr");
 
 		List result = tx.exec();
 
