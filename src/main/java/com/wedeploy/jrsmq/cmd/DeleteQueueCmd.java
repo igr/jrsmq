@@ -1,6 +1,6 @@
 package com.wedeploy.jrsmq.cmd;
 
-import com.wedeploy.jrsmq.Names;
+import com.wedeploy.jrsmq.Values;
 import com.wedeploy.jrsmq.RedisSMQConfig;
 import com.wedeploy.jrsmq.RedisSMQException;
 import com.wedeploy.jrsmq.Validator;
@@ -9,7 +9,7 @@ import redis.clients.jedis.Transaction;
 
 import java.util.List;
 
-import static com.wedeploy.jrsmq.Names.QUEUES;
+import static com.wedeploy.jrsmq.Values.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
 
 /**
@@ -46,7 +46,7 @@ public class DeleteQueueCmd implements Cmd<Integer> {
 
 		Transaction tx = jedis.multi();
 
-		tx.del(key + Names.Q);
+		tx.del(key + Values.Q);
 		tx.del(key);
 		tx.srem(config.redisNs() + QUEUES, qname);
 

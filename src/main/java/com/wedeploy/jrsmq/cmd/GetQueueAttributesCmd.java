@@ -10,7 +10,7 @@ import redis.clients.jedis.Transaction;
 
 import java.util.List;
 
-import static com.wedeploy.jrsmq.Names.Q;
+import static com.wedeploy.jrsmq.Values.Q;
 
 /**
  * Get queue attributes, counter and stats.

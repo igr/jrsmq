@@ -5,7 +5,7 @@ import redis.clients.jedis.Jedis;
 
 import java.util.Set;
 
-import static com.wedeploy.jrsmq.Names.QUEUES;
+import static com.wedeploy.jrsmq.Values.QUEUES;
 
 /**
  * List all queues.

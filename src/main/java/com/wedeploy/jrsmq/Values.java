@@ -1,6 +1,6 @@
 package com.wedeploy.jrsmq;
 
-public interface Names {
+public interface Values {
 
 	String Q = ":Q";
 	String QUEUES = "QUEUES";

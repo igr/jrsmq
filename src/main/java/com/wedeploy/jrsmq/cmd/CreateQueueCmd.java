@@ -8,8 +8,8 @@ import redis.clients.jedis.Transaction;
 
 import java.util.List;
 
-import static com.wedeploy.jrsmq.Names.Q;
-import static com.wedeploy.jrsmq.Names.QUEUES;
+import static com.wedeploy.jrsmq.Values.Q;
+import static com.wedeploy.jrsmq.Values.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
 
 /**

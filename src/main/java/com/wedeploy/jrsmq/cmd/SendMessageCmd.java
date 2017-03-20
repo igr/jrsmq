@@ -6,7 +6,7 @@ import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
-import static com.wedeploy.jrsmq.Names.Q;
+import static com.wedeploy.jrsmq.Values.Q;
 
 /**
  * Send a new message.
