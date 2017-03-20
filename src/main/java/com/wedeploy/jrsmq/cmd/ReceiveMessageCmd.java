@@ -36,7 +36,7 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 
 		QueueDef q = getQueue(name, false);
 
-		long vt = this.vt;
+		int vt = this.vt;
 		if (vt == -1) {
 			vt = q.vt();
 		}

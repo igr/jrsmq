@@ -13,7 +13,7 @@ import static com.wedeploy.jrsmq.Names.Q;
 public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 
 	private String qname;
-	private long vt = -1;
+	private int vt = -1;
 	private int maxSize = -1;
 	private int delay = -1;
 	private final GetQueueAttributesCmd getQueueAttributes;
@@ -28,7 +28,7 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 		return this;
 	}
 
-	public SetQueueAttributesCmd vt(long vt) {
+	public SetQueueAttributesCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}

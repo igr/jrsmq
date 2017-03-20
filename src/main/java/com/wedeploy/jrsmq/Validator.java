@@ -15,9 +15,9 @@ public class Validator {
 		return assertValidVt(delay);
 	}
 
-	public Validator assertValidVt(long value) {
-		if (value < 0 || value > 9999999) {
-			throw validationException(value, "is out of range [0, 9999999].");
+	public Validator assertValidVt(int vt) {
+		if (vt < 0 || vt > 9999999) {
+			throw validationException(vt, "is out of range [0, 9999999].");
 		}
 
 		return this;

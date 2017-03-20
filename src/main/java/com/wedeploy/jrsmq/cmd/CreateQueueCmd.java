@@ -16,7 +16,7 @@ public class CreateQueueCmd implements Cmd<Integer> {
 
 	private final Jedis jedis;
 	private final RedisSMQConfig config;
-	private long vt = 30;
+	private int vt = 30;
 	private int delay = 0;
 	private int maxsize = 65536;
 	private String qname;
@@ -31,7 +31,7 @@ public class CreateQueueCmd implements Cmd<Integer> {
 		return this;
 	}
 
-	public CreateQueueCmd vt(long vt) {
+	public CreateQueueCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}

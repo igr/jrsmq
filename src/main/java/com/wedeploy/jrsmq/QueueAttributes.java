@@ -2,7 +2,7 @@ package com.wedeploy.jrsmq;
 
 public class QueueAttributes {
 
-	private final long vt;
+	private final int vt;
 	private final int delay;
 	private final int maxSize;
 	private final long totalRecv;
@@ -12,7 +12,7 @@ public class QueueAttributes {
 	private final long msgs;
 	private final long hiddenMsgs;
 
-	public QueueAttributes(long vt, int delay, int maxSize, long totalRecv, long totalSent, long created, long modified, long msgs, long hiddenMsgs) {
+	public QueueAttributes(int vt, int delay, int maxSize, long totalRecv, long totalSent, long created, long modified, long msgs, long hiddenMsgs) {
 		this.vt = vt;
 		this.delay = delay;
 		this.maxSize = maxSize;
@@ -24,7 +24,7 @@ public class QueueAttributes {
 		this.hiddenMsgs = hiddenMsgs;
 	}
 
-	public long vt() {
+	public int vt() {
 		return vt;
 	}
 

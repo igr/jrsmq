@@ -4,7 +4,7 @@ package com.wedeploy.jrsmq;
  * Queue definition.
  */
 public class QueueDef {
-	private final long vt;
+	private final int vt;
 	private final int delay;
 	private final int maxsize;
 	private final long ts;
@@ -13,7 +13,7 @@ public class QueueDef {
 
 	public QueueDef(String qname, String vt, String delay, String maxsize, long ts, String uid) {
 		this.qname = qname;
-		this.vt = Long.valueOf(vt);
+		this.vt = Integer.valueOf(vt);
 		this.delay = Integer.valueOf(delay);
 		this.maxsize = Integer.valueOf(maxsize);
 		this.ts = ts;
@@ -24,7 +24,7 @@ public class QueueDef {
 		return qname;
 	}
 
-	public long vt() {
+	public int vt() {
 		return vt;
 	}
 
