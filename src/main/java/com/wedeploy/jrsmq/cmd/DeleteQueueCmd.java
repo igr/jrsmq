@@ -12,7 +12,10 @@ import java.util.List;
 import static com.wedeploy.jrsmq.Names.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
 
-public class DeleteQueueCmd implements Cmd<Void> {
+/**
+ * Delete a queue and all messages.
+ */
+public class DeleteQueueCmd implements Cmd<Integer> {
 
 	private final RedisSMQConfig config;
 	private final Jedis jedis;
@@ -23,13 +26,19 @@ public class DeleteQueueCmd implements Cmd<Void> {
 		this.jedis = jedis;
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public DeleteQueueCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * @return 1
+	 */
 	@Override
-	public Void execute() {
+	public Integer execute() {
 		Validator.create()
 			.assertValidQname(qname);
 
@@ -47,7 +56,7 @@ public class DeleteQueueCmd implements Cmd<Void> {
 			throw new RedisSMQException("Queue not found: " + qname);
 		}
 
-		return null;
+		return 1;
 	}
 
 

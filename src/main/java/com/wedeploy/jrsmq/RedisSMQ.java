@@ -65,7 +65,7 @@ public class RedisSMQ {
 	}
 
 	/**
-	 * Deletes a queue.
+	 * Deletes a queue and all messages.
 	 * @see DeleteQueueCmd
 	 */
 	public DeleteQueueCmd deleteQueue() {
