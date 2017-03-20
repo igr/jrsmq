@@ -52,7 +52,7 @@ public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
 		List<String> rec0 = (List<String>) results.get(0);
 
 		QueueAttributes qa = new QueueAttributes(
-			Long.parseLong(rec0.get(0)),
+			Integer.parseInt(rec0.get(0)),
 			Integer.parseInt(rec0.get(1)),
 			Integer.parseInt(rec0.get(2)),
 			Util.safeParseLong(rec0.get(3)),

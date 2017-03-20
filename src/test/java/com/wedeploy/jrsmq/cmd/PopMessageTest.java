@@ -38,6 +38,8 @@ public class PopMessageTest {
 		msg = rsmq.popMessage().qname(TEST_QNAME).execute();
 		assertNull(msg);
 
+		// clean up
+
 		rsmq.deleteQueue().qname(TEST_QNAME).execute();
 		rsmq.quit();
 	}
@@ -51,6 +53,8 @@ public class PopMessageTest {
 
 		QueueMessage msg = rsmq.popMessage().qname(TEST_QNAME).execute();
 		assertNull(msg);
+
+		// clean up
 
 		rsmq.deleteQueue().qname(TEST_QNAME).execute();
 		rsmq.quit();

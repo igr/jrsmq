@@ -1,5 +1,6 @@
 package com.wedeploy.jrsmq;
 
+import com.wedeploy.jrsmq.cmd.ChangeMessageVisibilityCmd;
 import com.wedeploy.jrsmq.cmd.CreateQueueCmd;
 import com.wedeploy.jrsmq.cmd.DeleteMessageCmd;
 import com.wedeploy.jrsmq.cmd.DeleteQueueCmd;
@@ -48,6 +49,10 @@ public class RedisSMQ {
 
 	// ---------------------------------------------------------------- cmds
 
+
+	public ChangeMessageVisibilityCmd changeMessageVisibility() {
+		return new ChangeMessageVisibilityCmd(config, jedis, changeMessageVisibility);
+	}
 	/**
 	 * Creates a queue.
 	 * @see CreateQueueCmd

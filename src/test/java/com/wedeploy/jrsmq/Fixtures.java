@@ -6,6 +6,7 @@ import redis.clients.jedis.Jedis;
 public class Fixtures {
 
 	public static final String TEST_QNAME = "testqueue";
+	public static final String NONEXISTING_ID = "12345678901234567890123456789012";
 
 	public static void cleanup() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
