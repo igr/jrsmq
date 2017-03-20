@@ -49,7 +49,10 @@ public class RedisSMQ {
 
 	// ---------------------------------------------------------------- cmds
 
-
+	/**
+	 * Changes the visibility timer of a single message.
+	 * @see ChangeMessageVisibilityCmd
+	 */
 	public ChangeMessageVisibilityCmd changeMessageVisibility() {
 		return new ChangeMessageVisibilityCmd(config, jedis, changeMessageVisibility);
 	}

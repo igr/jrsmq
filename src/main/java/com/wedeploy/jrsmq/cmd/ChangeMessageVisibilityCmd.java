@@ -5,6 +5,10 @@ import com.wedeploy.jrsmq.RedisSMQConfig;
 import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 
+/**
+ * Change the visibility timer of a single message. The time when the message
+ * will be visible again is calculated from the current time (now) + vt.
+ */
 public class ChangeMessageVisibilityCmd extends BaseQueueCmd<Integer> {
 
 	private final String changeMessageVisibilitySha1;
@@ -17,22 +21,34 @@ public class ChangeMessageVisibilityCmd extends BaseQueueCmd<Integer> {
 		this.changeMessageVisibilitySha1 = changeMessageVisibilitySha1;
 	}
 
+	/**
+	 * The Queue name.
+	 */
 	public ChangeMessageVisibilityCmd qname(String qname) {
 		this.qname = qname;
 		return this;
 	}
 
+	/**
+	 * The message id.
+	 */
 	public ChangeMessageVisibilityCmd id(String id) {
 		this.id = id;
 		return this;
 	}
 
+	/**
+	 * The length of time, in seconds, that this message will not be visible. Allowed values: 0-9999999.
+	 */
 	public ChangeMessageVisibilityCmd vt(int vt) {
 		this.vt = vt;
 		return this;
 	}
 
 
+	/**
+	 * @return 1 if successful, 0 if the message was not found.
+	 */
 	@Override
 	public Integer execute() {
 		Validator.create()

@@ -1,11 +1,13 @@
 package com.wedeploy.jrsmq.cmd;
 
 import com.wedeploy.jrsmq.Fixtures;
+import com.wedeploy.jrsmq.QueueMessage;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.wedeploy.jrsmq.Fixtures.TEST_QNAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ChangeMessageVisibilityTest {
 
@@ -38,9 +40,13 @@ public class ChangeMessageVisibilityTest {
 
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").execute();
 
-		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(id).vt(1000).execute();
+		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(id).vt(10000).execute();
 
 		assertEquals(1, result);
+
+		QueueMessage queueMessage = rsmq.receiveMessage().qname(TEST_QNAME).execute();
+
+		assertNull(queueMessage);	// message is not visible any more.
 
 		// clean up
 
