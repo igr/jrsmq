@@ -9,6 +9,7 @@ import redis.clients.jedis.Transaction;
 import java.util.List;
 
 import static com.wedeploy.jrsmq.Values.Q;
+import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
 
 /**
  * Set queue parameters.
@@ -18,9 +19,9 @@ import static com.wedeploy.jrsmq.Values.Q;
 public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 
 	private String qname;
-	private int vt = -1;
-	private int maxSize = -1;
-	private int delay = -1;
+	private int vt = UNSET_VALUE;
+	private int maxSize = UNSET_VALUE;
+	private int delay = UNSET_VALUE;
 	private final GetQueueAttributesCmd getQueueAttributes;
 
 	public SetQueueAttributesCmd(RedisSMQConfig config, Jedis jedis) {
@@ -63,13 +64,14 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 		return this;
 	}
 
-
 	/**
 	 * @return {@link QueueAttributes}.
 	 */
 	@Override
 	public QueueAttributes execute() {
-		Validator.create().assertValidQname(qname);
+		Validator.create()
+			.assertValidQname(qname)
+			.assertAtLeastOneSet(vt, maxSize, delay);
 
 		getQueue(qname, false); // just to check if it is an existing queue
 
@@ -82,15 +84,16 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 		tx.hset(key, "modified", times.get(0));
 
 		Validator validator = Validator.create();
-		if (vt != -1) {
+
+		if (vt != UNSET_VALUE) {
 			validator.assertValidVt(vt);
 			tx.hset(key, "vt", String.valueOf(vt));
 		}
-		if (maxSize != -1) {
+		if (maxSize != UNSET_VALUE) {
 			validator.assertValidMaxSize(maxSize);
 			tx.hset(key, "maxsize", String.valueOf(maxSize));
 		}
-		if (delay != -1) {
+		if (delay != UNSET_VALUE) {
 			validator.assertValidDelay(delay);
 			tx.hset(key, "delay", String.valueOf(delay));
 		}

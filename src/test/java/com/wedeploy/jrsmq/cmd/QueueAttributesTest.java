@@ -9,6 +9,7 @@ import static com.wedeploy.jrsmq.Fixtures.TEST_QNAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class QueueAttributesTest {
 
@@ -48,14 +49,11 @@ public class QueueAttributesTest {
 
 		rsmq.connect().createQueue().qname(TEST_QNAME).execute();
 
-		Thread.sleep(1000);
-
-		rsmq.setQueueAttributes().qname(TEST_QNAME).execute();
-		QueueAttributes qa = rsmq.getQueueAttributes().qname(TEST_QNAME).execute();
-
-		assertEquals(0, qa.delay());
-		assertTrue(qa.modified() > qa.created());
-
+		try {
+			rsmq.setQueueAttributes().qname(TEST_QNAME).execute();
+			fail();
+		}
+		catch (Exception ignore) {}
 		// cleanup
 
 		rsmq.deleteQueue().qname(TEST_QNAME).execute();

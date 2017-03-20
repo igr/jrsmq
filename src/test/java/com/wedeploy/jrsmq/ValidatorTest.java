@@ -2,6 +2,8 @@ package com.wedeploy.jrsmq;
 
 import org.junit.Test;
 
+import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
+
 public class ValidatorTest {
 
 	@Test
@@ -38,4 +40,13 @@ public class ValidatorTest {
 		Validator.create().assertValidQname("");
 	}
 
+	@Test
+	public void testAtLeastOneSet() {
+		Validator.create().assertAtLeastOneSet(1,UNSET_VALUE, UNSET_VALUE);
+	}
+
+	@Test(expected = Exception.class)
+	public void testAtLeastOneSet_allUnset() {
+		Validator.create().assertAtLeastOneSet(UNSET_VALUE, UNSET_VALUE, UNSET_VALUE);
+	}
 }

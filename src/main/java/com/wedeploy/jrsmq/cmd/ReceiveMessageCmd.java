@@ -8,6 +8,8 @@ import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
+import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
+
 /**
  * Receive the next message from the queue.
  */
@@ -15,7 +17,7 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 
 	private final String receiveMessageSha1;
 	private String name;
-	private int vt = -1;
+	private int vt = UNSET_VALUE;
 
 	public ReceiveMessageCmd(RedisSMQConfig config, Jedis jedis, String receiveMessageSha1) {
 		super(config, jedis);
@@ -50,7 +52,7 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 		QueueDef q = getQueue(name, false);
 
 		int vt = this.vt;
-		if (vt == -1) {
+		if (vt == UNSET_VALUE) {
 			vt = q.vt();
 		}
 		Validator.create().assertValidVt(vt);

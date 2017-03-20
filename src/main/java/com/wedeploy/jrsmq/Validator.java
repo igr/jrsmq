@@ -2,6 +2,8 @@ package com.wedeploy.jrsmq;
 
 import java.util.regex.Pattern;
 
+import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
+
 /**
  * Convenient validator for arguments.
  */
@@ -64,6 +66,19 @@ public class Validator {
 		}
 		if (q.maxsize() != -1 && message.length() > q.maxsize()) {
 			throw validationException("for message is too long.");
+		}
+	}
+
+	public void assertAtLeastOneSet(int... values) {
+		int unsetCount = 0;
+		for (int value : values) {
+			if (value == UNSET_VALUE) {
+				unsetCount++;
+			}
+		}
+
+		if (unsetCount == values.length) {
+			throw validationException("of parameters must have at least one set");
 		}
 	}
 
