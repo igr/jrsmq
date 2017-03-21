@@ -77,6 +77,13 @@ bintray {
     }
 }
 
+tasks.withType(Test) {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+}
+
 task setUpRedis {
     doLast {
         exec {
