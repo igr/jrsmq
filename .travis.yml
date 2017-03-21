@@ -1,0 +1,29 @@
+sudo: required
+language: java
+
+before_cache:
+  - rm -rf $HOME/.gradle/caches/modules-2/modules-2.lock
+
+services:
+  - docker
+
+jdk:
+  - oraclejdk8
+
+before_install:
+  - ./gradlew setUpRedis
+
+install:
+  - ./gradlew clean build -x test
+
+script:
+  - ./gradlew test -S
+
+after_failure:
+  - find build/test-results -name "TEST-*.xml" -type f -print0 | xargs -0 cat
+
+after_script:
+  - ./gradlew tearDownRedis
+
+notifications:
+  email: false
