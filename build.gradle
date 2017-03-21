@@ -6,6 +6,7 @@ repositories {
     jcenter()
 }
 
+apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
@@ -72,6 +73,31 @@ bintray {
         version {
             name = project.version
             vcsTag = project.version
+        }
+    }
+}
+
+tasks.withType(Test) {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+}
+
+task setUpRedis {
+    doLast {
+        exec {
+            executable "docker"
+            args "run", "-p", "6379:6379", "-d", "--name", "redis", "redis:latest"
+        }
+    }
+}
+
+task tearDownRedis {
+    doLast {
+        exec {
+            executable "docker"
+            args "rm", "-f", "-v", "redis"
         }
     }
 }
