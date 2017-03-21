@@ -77,6 +77,24 @@ bintray {
     }
 }
 
+task setUpRedis {
+    doLast {
+        exec {
+            executable "docker"
+            args "run", "-p", "6379", "-d", "--name", "redis", "redis:latest"
+        }
+    }
+}
+
+task tearDownRedis {
+    doLast {
+        exec {
+            executable "docker"
+            args "rm", "-f", "-v", "redis"
+        }
+    }
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = '3.4.1'
 }
