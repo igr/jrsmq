@@ -88,7 +88,7 @@ task setUpRedis {
     doLast {
         exec {
             executable "docker"
-            args "run", "-p", "6379", "-d", "--name", "redis", "redis:latest"
+            args "run", "-p", "6379:6379", "-d", "--name", "redis", "redis:latest"
         }
     }
 }
