@@ -23,7 +23,7 @@ library. We decided to add one to make the usage lifecycle bit more flexible.
     rsmq.connect()
         .createQueue()
         .qname("myqueue")
-        .execute();
+        .exec();
 
     String id = rsmq.sendMessage()
                     .qname("myqueue")
