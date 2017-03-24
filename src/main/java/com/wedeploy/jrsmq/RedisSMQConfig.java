@@ -7,12 +7,14 @@ public class RedisSMQConfig {
 
 	private String host;
 	private int port;
+	private int timeout;
 	private String ns;
 	private String redisns;
 
 	public RedisSMQConfig() {
 		host("localhost");
 		port(6379);
+		timeout(5000);
 		ns("rsmq");
 	}
 
@@ -44,6 +46,18 @@ public class RedisSMQConfig {
 	 */
 	public RedisSMQConfig port(int port) {
 		this.port = port;
+		return this;
+	}
+
+	public int timeout() {
+		return timeout;
+	}
+
+	/**
+	 * Sets redis server timeout.
+	 */
+	public RedisSMQConfig timeout(int timeout) {
+		this.timeout = timeout;
 		return this;
 	}
 

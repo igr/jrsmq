@@ -23,7 +23,7 @@ public class RedisSMQ {
 
 	public RedisSMQ(RedisSMQConfig config) {
 		this.config = config;
-		this.jedis = new Jedis(config.host(), config.port());
+		this.jedis = new Jedis(config.host(), config.port(), config.timeout());
 	}
 
 	// ---------------------------------------------------------------- connect
