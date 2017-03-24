@@ -41,8 +41,12 @@ public class PopMessageCmd extends BaseQueueCmd<QueueMessage> {
 
 		QueueDef q = getQueue(qname, false);
 
-		List result = (List) jedis.evalsha(popMessageSha1, 2, config.redisNs() + qname, String.valueOf(q.ts()));
+		Object result = jedis.evalsha(popMessageSha1, 2, config.redisNs() + qname, String.valueOf(q.ts()));
 
-		return createQueueMessage(result);
+		if (result instanceof List) {
+			return createQueueMessage((List)result);
+		}
+
+		return null;
 	}
 }
