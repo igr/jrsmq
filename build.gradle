@@ -1,9 +1,7 @@
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-}
 repositories {
+    mavenLocal()
+    maven { url wedeployRepo }
     mavenCentral()
-    jcenter()
 }
 
 apply plugin: 'idea'
@@ -11,7 +9,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 group = 'com.wedeploy'
-version = 1.0
+version = '1.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -42,39 +40,25 @@ artifacts {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        jar(MavenPublication) {
             from components.java
-
             artifact sourceJar
-            artifact javadocJar
+        }
+    }
+    repositories {
+        maven {
+            url wedeployRepo
+            credentials {
+                username wedeployRepoUsername
+                password wedeployRepoPassword
+            }
         }
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-
-    publications = ['mavenJava']
-
-    dryRun = false
-    publish = true
-
-    pkg {
-        userOrg = 'liferay'
-        repo = 'wedeploy'
-        name = project.name
-        desc = project.description
-        licenses = ['BSD 2-Clause']
-        vcsUrl = 'https://github.com/wedeploy/jrsmq'
-        issueTrackerUrl = 'https://github.com/wedeploy/jrsmq/issues'
-        publicDownloadNumbers = true
-
-        version {
-            name = project.version
-            vcsTag = project.version
-        }
-    }
+task install(dependsOn: publishToMavenLocal) {
+    group = 'Publishing'
+    description = 'Installs artifacts to local Maven repository'
 }
 
 tasks.withType(Test) {
