@@ -7,6 +7,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.Q;
 import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
@@ -24,9 +25,9 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 	private int delay = UNSET_VALUE;
 	private final GetQueueAttributesCmd getQueueAttributes;
 
-	public SetQueueAttributesCmd(RedisSMQConfig config, Jedis jedis) {
-		super(config, jedis);
-		this.getQueueAttributes = new GetQueueAttributesCmd(config, jedis);
+	public SetQueueAttributesCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
+		this.getQueueAttributes = new GetQueueAttributesCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -68,12 +69,12 @@ public class SetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 	 * @return {@link QueueAttributes}.
 	 */
 	@Override
-	public QueueAttributes exec() {
+	protected QueueAttributes exec(Jedis jedis) {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertAtLeastOneSet(vt, maxSize, delay);
 
-		getQueue(qname, false); // just to check if it is an existing queue
+		getQueue(jedis, qname, false); // just to check if it is an existing queue
 
 		String key = config.redisNs() + qname + Q;
 

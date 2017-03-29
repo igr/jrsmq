@@ -7,6 +7,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.Q;
 import static com.wedeploy.jrsmq.Values.QUEUES;
@@ -15,18 +16,15 @@ import static com.wedeploy.jrsmq.Util.toInt;
 /**
  * Create a new queue.
  */
-public class CreateQueueCmd implements Cmd<Integer> {
+public class CreateQueueCmd extends BaseQueueCmd<Integer> {
 
-	private final Jedis jedis;
-	private final RedisSMQConfig config;
 	private int vt = 30;
 	private int delay = 0;
 	private int maxsize = 65536;
 	private String qname;
 
-	public CreateQueueCmd(RedisSMQConfig config, Jedis jedis) {
-		this.config = config;
-		this.jedis = jedis;
+	public CreateQueueCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
 	}
 
 	/**
@@ -67,7 +65,7 @@ public class CreateQueueCmd implements Cmd<Integer> {
 	 * @return 1
 	 */
 	@Override
-	public Integer exec() {
+	protected Integer exec(Jedis jedis) {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertValidVt(vt)

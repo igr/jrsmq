@@ -32,10 +32,10 @@ public class Fixtures {
 	}
 
 	public static QueueDef getQueue(TestRedisSMQ redisSMQ, String name) {
-		return new BaseQueueCmd<QueueDef>(redisSMQ.config(), redisSMQ.jedis()) {
+		return new BaseQueueCmd<QueueDef>(redisSMQ.config(), redisSMQ::jedis) {
 			@Override
-			public QueueDef exec() {
-				return getQueue(name, true);
+			protected QueueDef exec(Jedis jedis) {
+				return getQueue(jedis, name, true);
 			}
 		}.exec();
 	}

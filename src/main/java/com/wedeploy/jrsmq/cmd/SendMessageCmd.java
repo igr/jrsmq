@@ -6,6 +6,8 @@ import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.util.function.Supplier;
+
 import static com.wedeploy.jrsmq.Values.Q;
 
 /**
@@ -17,8 +19,8 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 	private String message;
 	private int delay;
 
-	public SendMessageCmd(RedisSMQConfig config, Jedis jedis) {
-		super(config, jedis);
+	public SendMessageCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
 	}
 
 	/**
@@ -50,8 +52,8 @@ public class SendMessageCmd extends BaseQueueCmd<String> {
 	 * @return The internal message id.
 	 */
 	@Override
-	public String exec() {
-		QueueDef q = getQueue(qname, true);
+	protected String exec(Jedis jedis) {
+		QueueDef q = getQueue(jedis, qname, true);
 
 		Validator.create()
 			.assertValidQname(qname)

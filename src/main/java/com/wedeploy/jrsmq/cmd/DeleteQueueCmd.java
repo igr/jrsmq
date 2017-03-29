@@ -8,6 +8,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.QUEUES;
 import static com.wedeploy.jrsmq.Util.toInt;
@@ -15,15 +16,12 @@ import static com.wedeploy.jrsmq.Util.toInt;
 /**
  * Delete a queue and all messages.
  */
-public class DeleteQueueCmd implements Cmd<Integer> {
+public class DeleteQueueCmd extends BaseQueueCmd<Integer> {
 
-	private final RedisSMQConfig config;
-	private final Jedis jedis;
 	private String qname;
 
-	public DeleteQueueCmd(RedisSMQConfig config, Jedis jedis) {
-		this.config = config;
-		this.jedis = jedis;
+	public DeleteQueueCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class DeleteQueueCmd implements Cmd<Integer> {
 	 * @return 1
 	 */
 	@Override
-	public Integer exec() {
+	protected Integer exec(Jedis jedis) {
 		Validator.create()
 			.assertValidQname(qname);
 

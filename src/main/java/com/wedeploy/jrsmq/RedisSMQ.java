@@ -10,11 +10,11 @@ import com.wedeploy.jrsmq.cmd.PopMessageCmd;
 import com.wedeploy.jrsmq.cmd.ReceiveMessageCmd;
 import com.wedeploy.jrsmq.cmd.SendMessageCmd;
 import com.wedeploy.jrsmq.cmd.SetQueueAttributesCmd;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
+
+import java.util.function.Supplier;
 
 public class RedisSMQ {
 
@@ -44,6 +44,11 @@ public class RedisSMQ {
 		return jedisPool.getResource();
 	}
 
+	/**
+	 * Jedis supplier.
+	 */
+	protected Supplier<Jedis> jedisSupplier = this::jedis;
+
 	// ---------------------------------------------------------------- cmds
 
 	/**
@@ -51,14 +56,14 @@ public class RedisSMQ {
 	 * @see ChangeMessageVisibilityCmd
 	 */
 	public ChangeMessageVisibilityCmd changeMessageVisibility() {
-		return new ChangeMessageVisibilityCmd(config, jedis(), changeMessageVisibility);
+		return new ChangeMessageVisibilityCmd(config, jedisSupplier, changeMessageVisibility);
 	}
 	/**
 	 * Creates a new queue.
 	 * @see CreateQueueCmd
 	 */
 	public CreateQueueCmd createQueue() {
-		return new CreateQueueCmd(config, jedis());
+		return new CreateQueueCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -66,7 +71,7 @@ public class RedisSMQ {
 	 * @see DeleteQueueCmd
 	 */
 	public DeleteQueueCmd deleteQueue() {
-		return new DeleteQueueCmd(config, jedis());
+		return new DeleteQueueCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -74,7 +79,7 @@ public class RedisSMQ {
 	 * @see DeleteMessageCmd
 	 */
 	public DeleteMessageCmd deleteMessage() {
-		return new DeleteMessageCmd(config, jedis());
+		return new DeleteMessageCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -82,7 +87,7 @@ public class RedisSMQ {
 	 * @see GetQueueAttributesCmd
 	 */
 	public GetQueueAttributesCmd getQueueAttributes() {
-		return new GetQueueAttributesCmd(config, jedis());
+		return new GetQueueAttributesCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -90,7 +95,7 @@ public class RedisSMQ {
 	 * @see SetQueueAttributesCmd
 	 */
 	public SetQueueAttributesCmd setQueueAttributes() {
-		return new SetQueueAttributesCmd(config, jedis());
+		return new SetQueueAttributesCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -98,7 +103,7 @@ public class RedisSMQ {
 	 * @see ListQueuesCmd
 	 */
 	public ListQueuesCmd listQueues() {
-		return new ListQueuesCmd(config, jedis());
+		return new ListQueuesCmd(config, jedisSupplier);
 	}
 
 	/**
@@ -106,7 +111,7 @@ public class RedisSMQ {
 	 * @see PopMessageCmd
 	 */
 	public PopMessageCmd popMessage() {
-		return new PopMessageCmd(config, jedis(), popMessageSha1);
+		return new PopMessageCmd(config, jedisSupplier, popMessageSha1);
 	}
 
 	/**
@@ -114,7 +119,7 @@ public class RedisSMQ {
 	 * @see ReceiveMessageCmd
 	 */
 	public ReceiveMessageCmd receiveMessage() {
-		return new ReceiveMessageCmd(config, jedis(), receiveMessageSha1);
+		return new ReceiveMessageCmd(config, jedisSupplier, receiveMessageSha1);
 	}
 
 	/**
@@ -122,7 +127,7 @@ public class RedisSMQ {
 	 * @see SendMessageCmd
 	 */
 	public SendMessageCmd sendMessage() {
-		return new SendMessageCmd(config, jedis());
+		return new SendMessageCmd(config, jedisSupplier);
 	}
 
 	/**

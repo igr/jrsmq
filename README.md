@@ -33,7 +33,7 @@ the method and properties naming.
     rsmq.deleteQueue()
         .qname("myqueue")
         .exec();
-        
+
     rsmq.quit();
 
 Enjoy!

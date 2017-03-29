@@ -9,21 +9,19 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.Q;
 
 /**
  * Get queue attributes, counter and stats.
  */
-public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
+public class GetQueueAttributesCmd extends BaseQueueCmd<QueueAttributes> {
 
-	private final RedisSMQConfig config;
-	private final Jedis jedis;
 	private String qname;
 
-	public GetQueueAttributesCmd(RedisSMQConfig config, Jedis jedis) {
-		this.config = config;
-		this.jedis = jedis;
+	public GetQueueAttributesCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class GetQueueAttributesCmd implements Cmd<QueueAttributes> {
 	 * @return {@link QueueAttributes}
 	 */
 	@Override
-	public QueueAttributes exec() {
+	protected QueueAttributes exec(Jedis jedis) {
 		Validator.create().assertValidQname(qname);
 
 		List<String> times = jedis.time();

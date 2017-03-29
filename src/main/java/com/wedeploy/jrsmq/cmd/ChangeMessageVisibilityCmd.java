@@ -5,6 +5,8 @@ import com.wedeploy.jrsmq.RedisSMQConfig;
 import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 
+import java.util.function.Supplier;
+
 /**
  * Change the visibility timer of a single message. The time when the message
  * will be visible again is calculated from the current time (now) + vt.
@@ -16,8 +18,8 @@ public class ChangeMessageVisibilityCmd extends BaseQueueCmd<Integer> {
 	private String id;
 	private int vt;
 
-	public ChangeMessageVisibilityCmd(RedisSMQConfig config, Jedis jedis, String changeMessageVisibilitySha1) {
-		super(config, jedis);
+	public ChangeMessageVisibilityCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier, String changeMessageVisibilitySha1) {
+		super(config, jedisSupplier);
 		this.changeMessageVisibilitySha1 = changeMessageVisibilitySha1;
 	}
 
@@ -45,18 +47,17 @@ public class ChangeMessageVisibilityCmd extends BaseQueueCmd<Integer> {
 		return this;
 	}
 
-
 	/**
 	 * @return 1 if successful, 0 if the message was not found.
 	 */
 	@Override
-	public Integer exec() {
+	protected Integer exec(Jedis jedis) {
 		Validator.create()
 			.assertValidQname(qname)
 			.assertValidVt(vt)
 			.assertValidId(id);
 
-		QueueDef q = getQueue(qname, false);
+		QueueDef q = getQueue(jedis, qname, false);
 
 		Long foo = (Long) jedis.evalsha(changeMessageVisibilitySha1, 3, config.redisNs() + qname, id, String.valueOf(q.ts() + vt * 1000));
 

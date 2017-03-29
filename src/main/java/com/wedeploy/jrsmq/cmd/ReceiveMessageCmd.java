@@ -7,6 +7,7 @@ import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.UNSET_VALUE;
 
@@ -19,8 +20,8 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 	private String name;
 	private int vt = UNSET_VALUE;
 
-	public ReceiveMessageCmd(RedisSMQConfig config, Jedis jedis, String receiveMessageSha1) {
-		super(config, jedis);
+	public ReceiveMessageCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier, String receiveMessageSha1) {
+		super(config, jedisSupplier);
 		this.receiveMessageSha1 = receiveMessageSha1;
 	}
 
@@ -45,11 +46,11 @@ public class ReceiveMessageCmd extends BaseQueueCmd<QueueMessage> {
 	 * @return {@link QueueMessage} or {@code null} if message is not there.
 	 */
 	@Override
-	public QueueMessage exec() {
+	protected QueueMessage exec(Jedis jedis) {
 		Validator.create()
 			.assertValidQname(name);
 
-		QueueDef q = getQueue(name, false);
+		QueueDef q = getQueue(jedis, name, false);
 
 		int vt = this.vt;
 		if (vt == UNSET_VALUE) {

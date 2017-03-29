@@ -9,23 +9,40 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.Q;
 
 public abstract class BaseQueueCmd<T> implements Cmd<T> {
 
 	protected final RedisSMQConfig config;
-	protected final Jedis jedis;
+	private final Supplier<Jedis> jedisSupplier;
 
-	public BaseQueueCmd(RedisSMQConfig config, Jedis jedis) {
+	public BaseQueueCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
 		this.config = config;
-		this.jedis = jedis;
+		this.jedisSupplier = jedisSupplier;
 	}
+
+	/**
+	 * Opens Jedis connection before usage, {@link #exec(Jedis) executes command}
+	 * and closes jedis connection.
+	 */
+	@Override
+	public final T exec() {
+		try (Jedis jedis = jedisSupplier.get()) {
+			return exec(jedis);
+		}
+	}
+
+	/**
+	 * Runs commands with given Jedis connection.
+	 */
+	protected abstract T exec(Jedis jedis);
 
 	/**
 	 * Reads a queue from the Redis.
 	 */
-	protected QueueDef getQueue(String qname, boolean generateUid) {
+	protected QueueDef getQueue(Jedis jedis, String qname, boolean generateUid) {
 		Transaction tx = jedis.multi();
 
 		String key = config.redisNs() + qname + Q;

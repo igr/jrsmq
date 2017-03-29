@@ -4,27 +4,24 @@ import com.wedeploy.jrsmq.RedisSMQConfig;
 import redis.clients.jedis.Jedis;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static com.wedeploy.jrsmq.Values.QUEUES;
 
 /**
  * List all queues.
  */
-public class ListQueuesCmd implements Cmd<Set<String>> {
+public class ListQueuesCmd extends BaseQueueCmd<Set<String>> {
 
-	private final RedisSMQConfig config;
-	private final Jedis jedis;
-
-	public ListQueuesCmd(RedisSMQConfig config, Jedis jedis) {
-		this.config = config;
-		this.jedis = jedis;
+	public ListQueuesCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier) {
+		super(config, jedisSupplier);
 	}
 
 	/**
 	 * @return collection of all queue names.
 	 */
 	@Override
-	public Set<String> exec() {
+	protected Set<String> exec(Jedis jedis) {
 		return jedis.smembers(config.redisNs() + QUEUES);
 	}
 }

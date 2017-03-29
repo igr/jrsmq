@@ -7,6 +7,7 @@ import com.wedeploy.jrsmq.Validator;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Receive the next message from the queue and delete it.
@@ -19,8 +20,8 @@ public class PopMessageCmd extends BaseQueueCmd<QueueMessage> {
 	private final String popMessageSha1;
 	private String qname;
 
-	public PopMessageCmd(RedisSMQConfig config, Jedis jedis, String popMessageSha1) {
-		super(config, jedis);
+	public PopMessageCmd(RedisSMQConfig config, Supplier<Jedis> jedisSupplier, String popMessageSha1) {
+		super(config, jedisSupplier);
 		this.popMessageSha1 = popMessageSha1;
 	}
 
@@ -36,10 +37,10 @@ public class PopMessageCmd extends BaseQueueCmd<QueueMessage> {
 	 * @return {@link QueueMessage} or {@code null} if no message is there.
 	 */
 	@Override
-	public QueueMessage exec() {
+	protected QueueMessage exec(Jedis jedis) {
 		Validator.create().assertValidQname(qname);
 
-		QueueDef q = getQueue(qname, false);
+		QueueDef q = getQueue(jedis, qname, false);
 
 		List result = (List)jedis.evalsha(popMessageSha1, 2, config.redisNs() + qname, String.valueOf(q.ts()));
 
