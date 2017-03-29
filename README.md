@@ -13,15 +13,11 @@ Java implementation of https://github.com/smrchy/rsmq.
 We are trying to follow the javascript contract as much as possible, including
 the method and properties naming.
 
-The only difference is the method `connect()` that does not exist in JavaScript
-library. We decided to add one to make the usage lifecycle bit more flexible.
-
 ## Example
 
     RedisSMQ rsmq = new RedisSMQ();
 
-    rsmq.connect()
-        .createQueue()
+    rsmq.createQueue()
         .qname("myqueue")
         .exec();
 
