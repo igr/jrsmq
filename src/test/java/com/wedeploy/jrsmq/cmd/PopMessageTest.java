@@ -21,7 +21,7 @@ public class PopMessageTest {
 	public void testPopMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").exec();
 		assertNotNull(id);
@@ -49,7 +49,7 @@ public class PopMessageTest {
 	public void testPopMessage_noMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		QueueMessage msg = rsmq.popMessage().qname(TEST_QNAME).exec();
 		assertNull(msg);

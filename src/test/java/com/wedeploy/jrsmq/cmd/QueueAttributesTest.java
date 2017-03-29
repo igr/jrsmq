@@ -22,7 +22,7 @@ public class QueueAttributesTest {
 	public void testGetQueueAttributes() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		rsmq.sendMessage().qname(TEST_QNAME).message("Hello1").exec();
 		rsmq.receiveMessage().qname(TEST_QNAME).exec();
@@ -47,7 +47,7 @@ public class QueueAttributesTest {
 	public void testSetQueueAttributes_noChange() throws InterruptedException {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		try {
 			rsmq.setQueueAttributes().qname(TEST_QNAME).exec();
@@ -64,7 +64,7 @@ public class QueueAttributesTest {
 	public void testSetQueueAttributes() throws InterruptedException {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		Thread.sleep(1000);
 

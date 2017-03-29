@@ -20,7 +20,7 @@ public class ChangeMessageVisibilityTest {
 	public void testChangeMessageVisibility_noMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		int result = rsmq.changeMessageVisibility().qname(TEST_QNAME).id(Fixtures.NONEXISTING_ID).exec();
 
@@ -36,7 +36,7 @@ public class ChangeMessageVisibilityTest {
 	public void testChangeMessageVisibility() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").exec();
 

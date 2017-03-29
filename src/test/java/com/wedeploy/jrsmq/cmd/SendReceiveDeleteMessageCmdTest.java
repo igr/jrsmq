@@ -22,7 +22,7 @@ public class SendReceiveDeleteMessageCmdTest {
 	public void testDeleteMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").exec();
 		assertNotNull(id);
@@ -41,7 +41,7 @@ public class SendReceiveDeleteMessageCmdTest {
 	public void testDeleteMessage_noMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		int deleted = rsmq.deleteMessage().qname(TEST_QNAME).id(Fixtures.NONEXISTING_ID).exec();
 		assertEquals(0, deleted);
@@ -54,7 +54,7 @@ public class SendReceiveDeleteMessageCmdTest {
 	public void testSendReceiveMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		String id = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World").exec();
 		assertNotNull(id);
@@ -74,7 +74,7 @@ public class SendReceiveDeleteMessageCmdTest {
 	public void testSendReceiveMessage_twoMessages() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		String id1 = rsmq.sendMessage().qname(TEST_QNAME).message("Hello World 1").exec();
 		assertNotNull(id1);
@@ -105,7 +105,7 @@ public class SendReceiveDeleteMessageCmdTest {
 	public void testReceiveMessage_noMessage() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
 
-		rsmq.connect().createQueue().qname(TEST_QNAME).exec();
+		rsmq.createQueue().qname(TEST_QNAME).exec();
 
 		QueueMessage msg = rsmq.receiveMessage().qname(TEST_QNAME).exec();
 		assertNull(msg);

@@ -10,11 +10,15 @@ import com.wedeploy.jrsmq.cmd.PopMessageCmd;
 import com.wedeploy.jrsmq.cmd.ReceiveMessageCmd;
 import com.wedeploy.jrsmq.cmd.SendMessageCmd;
 import com.wedeploy.jrsmq.cmd.SetQueueAttributesCmd;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 public class RedisSMQ {
 
-	protected final Jedis jedis;
+	protected final JedisPool jedisPool;
 	protected final RedisSMQConfig config;
 
 	public RedisSMQ() {
@@ -23,28 +27,21 @@ public class RedisSMQ {
 
 	public RedisSMQ(RedisSMQConfig config) {
 		this.config = config;
-		this.jedis = new Jedis(config.host(), config.port(), config.timeout());
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxIdle(128);
+		poolConfig.setMaxTotal(128);
+		jedisPool = new JedisPool(
+			poolConfig, config.host(), config.port(), config.timeout(), config.password(), config.database(), null);
+		initScript(jedisPool.getResource());
 	}
 
 	// ---------------------------------------------------------------- connect
 
-	private boolean connected;
-
 	/**
-	 * Connects to Redis.
+	 * Gets a connection from the pool.
 	 */
-	public RedisSMQ connect() {
-		this.jedis.connect();
-		initScript();
-		this.connected = true;
-		return this;
-	}
-
-	/**
-	 * Returns {@code true} if client is connected to Redis.
-	 */
-	public boolean isConnected() {
-		return connected;
+	protected Jedis jedis() {
+		return jedisPool.getResource();
 	}
 
 	// ---------------------------------------------------------------- cmds
@@ -54,14 +51,14 @@ public class RedisSMQ {
 	 * @see ChangeMessageVisibilityCmd
 	 */
 	public ChangeMessageVisibilityCmd changeMessageVisibility() {
-		return new ChangeMessageVisibilityCmd(config, jedis, changeMessageVisibility);
+		return new ChangeMessageVisibilityCmd(config, jedis(), changeMessageVisibility);
 	}
 	/**
 	 * Creates a new queue.
 	 * @see CreateQueueCmd
 	 */
 	public CreateQueueCmd createQueue() {
-		return new CreateQueueCmd(config, jedis);
+		return new CreateQueueCmd(config, jedis());
 	}
 
 	/**
@@ -69,7 +66,7 @@ public class RedisSMQ {
 	 * @see DeleteQueueCmd
 	 */
 	public DeleteQueueCmd deleteQueue() {
-		return new DeleteQueueCmd(config, jedis);
+		return new DeleteQueueCmd(config, jedis());
 	}
 
 	/**
@@ -77,7 +74,7 @@ public class RedisSMQ {
 	 * @see DeleteMessageCmd
 	 */
 	public DeleteMessageCmd deleteMessage() {
-		return new DeleteMessageCmd(config, jedis);
+		return new DeleteMessageCmd(config, jedis());
 	}
 
 	/**
@@ -85,7 +82,7 @@ public class RedisSMQ {
 	 * @see GetQueueAttributesCmd
 	 */
 	public GetQueueAttributesCmd getQueueAttributes() {
-		return new GetQueueAttributesCmd(config, jedis);
+		return new GetQueueAttributesCmd(config, jedis());
 	}
 
 	/**
@@ -93,7 +90,7 @@ public class RedisSMQ {
 	 * @see SetQueueAttributesCmd
 	 */
 	public SetQueueAttributesCmd setQueueAttributes() {
-		return new SetQueueAttributesCmd(config, jedis);
+		return new SetQueueAttributesCmd(config, jedis());
 	}
 
 	/**
@@ -101,7 +98,7 @@ public class RedisSMQ {
 	 * @see ListQueuesCmd
 	 */
 	public ListQueuesCmd listQueues() {
-		return new ListQueuesCmd(config, jedis);
+		return new ListQueuesCmd(config, jedis());
 	}
 
 	/**
@@ -109,7 +106,7 @@ public class RedisSMQ {
 	 * @see PopMessageCmd
 	 */
 	public PopMessageCmd popMessage() {
-		return new PopMessageCmd(config, jedis, popMessageSha1);
+		return new PopMessageCmd(config, jedis(), popMessageSha1);
 	}
 
 	/**
@@ -117,7 +114,7 @@ public class RedisSMQ {
 	 * @see ReceiveMessageCmd
 	 */
 	public ReceiveMessageCmd receiveMessage() {
-		return new ReceiveMessageCmd(config, jedis, receiveMessageSha1);
+		return new ReceiveMessageCmd(config, jedis(), receiveMessageSha1);
 	}
 
 	/**
@@ -125,7 +122,7 @@ public class RedisSMQ {
 	 * @see SendMessageCmd
 	 */
 	public SendMessageCmd sendMessage() {
-		return new SendMessageCmd(config, jedis);
+		return new SendMessageCmd(config, jedis());
 	}
 
 	/**
@@ -133,12 +130,12 @@ public class RedisSMQ {
 	 */
 	public void quit() {
 		try {
-			this.jedis.disconnect();
+			this.jedisPool.close();
+			this.jedisPool.destroy();
 		}
 		catch (Exception ex) {
 			// ignore
 		}
-		this.connected = false;
 	}
 
 	// ---------------------------------------------------------------- scripts
@@ -151,7 +148,7 @@ public class RedisSMQ {
 	protected String receiveMessageSha1;
 	protected String changeMessageVisibility;
 
-	protected void initScript() {
+	protected void initScript(Jedis jedis) {
 		popMessageSha1 = jedis.scriptLoad(SCRIPT_POPMESSAGE);
 		receiveMessageSha1 = jedis.scriptLoad(SCRIPT_RECEIVEMESSAGE);
 		changeMessageVisibility = jedis.scriptLoad(SCRIPT_CHANGEMESSAGEVISIBILITY);

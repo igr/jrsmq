@@ -11,7 +11,7 @@ public class Fixtures {
 	public static void cleanup() {
 		TestRedisSMQ rsmq = Fixtures.redisSMQ();
 		try {
-			rsmq.connect().deleteQueue().qname(TEST_QNAME).exec();
+			rsmq.deleteQueue().qname(TEST_QNAME).exec();
 		}
 		catch (Exception ignore) {
 		}
@@ -48,9 +48,6 @@ public class Fixtures {
 			super(config);
 		}
 
-		public Jedis jedis() {
-			return jedis;
-		}
 		public RedisSMQConfig config() {
 			return config;
 		}

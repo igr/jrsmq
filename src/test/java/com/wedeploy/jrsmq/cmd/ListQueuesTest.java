@@ -13,7 +13,6 @@ public class ListQueuesTest {
 	@Test
 	public void testListQueues_noQueues() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
-		rsmq.connect();
 
 		Set<String> queues = rsmq.listQueues().exec();
 		assertTrue(queues.isEmpty());
@@ -24,7 +23,7 @@ public class ListQueuesTest {
 	@Test
 	public void testListQueues() {
 		Fixtures.TestRedisSMQ rsmq = Fixtures.redisSMQ();
-		rsmq.connect().createQueue().qname("one").exec();
+		rsmq.createQueue().qname("one").exec();
 
 		Set<String> queues = rsmq.listQueues().exec();
 		assertEquals(1, queues.size());
