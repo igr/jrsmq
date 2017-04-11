@@ -1,15 +1,18 @@
 repositories {
     mavenLocal()
-    maven { url wedeployRepo }
     mavenCentral()
 }
 
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
+// RELEASE FLAG
+def release = false
+
 group = 'com.wedeploy'
-version = '1.1-SNAPSHOT'
+version = '1.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -31,6 +34,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+model {
+    tasks.publishJarPublicationToMavenRepository {
+        enabled = !release
+    }
+    tasks.publishJarPublicationToSonatypeRepository {
+        if (release)
+            dependsOn(project.tasks.signArchives)
+        enabled = release
+    }
+}
 
 artifacts {
     archives jar
@@ -38,11 +51,47 @@ artifacts {
     archives javadocJar
 }
 
+if (release) {
+    signing {
+        sign configurations.archives
+    }
+}
+
 publishing {
     publications {
         jar(MavenPublication) {
+            customizePom(pom, rootProject)
             from components.java
+
             artifact sourceJar
+            artifact javadocJar
+
+            if (release) {
+                // sign the pom
+                pom.withXml {
+                    def pomFile = file("${project.buildDir}/generated-pom.xml")
+                    writeTo(pomFile)
+                    def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                    artifact(pomAscFile) {
+                        classifier = null
+                        extension = 'pom.asc'
+                    }
+                    pomFile.delete()
+                }
+
+                // sign the artifacts
+                project.tasks.signArchives.signatureFiles.each {
+                    artifact(it) {
+                        def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                        if (matcher.find()) {
+                            classifier = matcher.group(1)
+                        } else {
+                            classifier = null
+                        }
+                        extension = 'jar.asc'
+                    }
+                }
+            }
         }
     }
     repositories {
@@ -51,6 +100,16 @@ publishing {
             credentials {
                 username wedeployRepoUsername
                 password wedeployRepoPassword
+            }
+        }
+        maven {
+            name 'sonatype'
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            if (release) {
+                credentials {
+                    username sonatypeUsername
+                    password sonatypePassword
+                }
             }
         }
     }
@@ -82,6 +141,46 @@ task tearDownRedis {
         exec {
             executable "docker"
             args "rm", "-f", "-v", "redis"
+        }
+    }
+}
+
+
+def customizePom(pom, gradleProject) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            name 'Redis Simple Message Queue'
+            description 'A lightweight message queue for Java that requires no dedicated queue server.'
+            url 'https://github.com/wedeploy/jrsmq'
+            organization {
+                name 'WeDeploy'
+                url 'http://wedeploy.com'
+            }
+            licenses {
+                license {
+                    name 'The New BSD License'
+                }
+            }
+            scm {
+                url 'https://github.com/wedeploy/api-java'
+            }
+            developers {
+                developer {
+                    id 'Igor'
+                    name 'Igor Spasić'
+                    email 'igor.spasic@liferay.com'
+                }
+            }
         }
     }
 }
