@@ -8,6 +8,10 @@ A lightweight message queue for Java that requires no dedicated queue server. Ju
 
 Java implementation of https://github.com/smrchy/rsmq.
 
+## Version
+
+	com.wedeploy:com.wedeploy.jrsmq:1.1
+
 ## Java implementation notes
 
 We are trying to follow the javascript contract as much as possible, including
