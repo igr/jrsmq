@@ -34,10 +34,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-model {
-    tasks.publishJarPublicationToMavenRepository {
-        enabled = !release
+if (project.hasProperty("wedeployRepo")) {
+    model {
+        tasks.publishJarPublicationToMavenRepository {
+            enabled = !release
+        }
     }
+}
+
+
+model {
     tasks.publishJarPublicationToSonatypeRepository {
         if (release)
             dependsOn(project.tasks.signArchives)
@@ -95,11 +101,14 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url wedeployRepo
-            credentials {
-                username wedeployRepoUsername
-                password wedeployRepoPassword
+        mavenLocal()
+        if (project.hasProperty("wedeployRepo")) {
+            maven {
+                url wedeployRepo
+                credentials {
+                    username wedeployRepoUsername
+                    password wedeployRepoPassword
+                }
             }
         }
         maven {
@@ -186,5 +195,5 @@ def customizePom(pom, gradleProject) {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '3.4.1'
+	gradleVersion = '4.4'
 }
