@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/wedeploy/jrsmq.svg?branch=master)](https://travis-ci.org/wedeploy/jrsmq)
-
 ![RSMQ: Redis Simple Message Queue for Node.js](https://img.webmart.de/rsmq_wide.png)
 
 # Redis Simple Message Queue
@@ -10,7 +8,7 @@ Java implementation of https://github.com/smrchy/rsmq.
 
 ## Version
 
-	com.wedeploy:com.wedeploy.jrsmq:1.1
+	com.oblac:jrsmq:1.2.0
 
 ## Java implementation notes
 

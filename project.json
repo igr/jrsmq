@@ -1,0 +1,17 @@
+{
+	"name" : "JRSMQ",
+	"description" : "A lightweight message queue for Java that requires no dedicated queue server.",
+	"group" : "com.oblac",
+	"version" : "1.2.0",
+	"github" : "igr/repo-url-parser",
+	"java" : "1.8",
+	"junit": "5.1.0",
+	"license" : "The New BSD License",
+	"compile" : [
+		"redis.clients:jedis:2.9.0"
+	],
+	"test" : [],
+	"imports" : [
+		"redis.gradle"
+	]
+}
