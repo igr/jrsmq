@@ -26,13 +26,18 @@ public class RedisSMQ {
 	}
 
 	public RedisSMQ(RedisSMQConfig config) {
-		this.config = config;
-		JedisPoolConfig poolConfig = new JedisPoolConfig();
-		poolConfig.setMaxIdle(128);
-		poolConfig.setMaxTotal(128);
-		jedisPool = new JedisPool(
-			poolConfig, config.host(), config.port(), config.timeout(), config.password(), config.database(), null);
-		initScript(jedisPool.getResource());
+		try {
+			this.config = config;
+			JedisPoolConfig poolConfig = new JedisPoolConfig();
+			poolConfig.setMaxIdle(128);
+			poolConfig.setMaxTotal(128);
+			jedisPool = new JedisPool(
+					poolConfig, config.host(), config.port(), config.timeout(), config.password(), config.database(), null);
+			initScript(jedisPool.getResource());
+		} catch (final Exception e) {
+			quit();
+			throw e;
+		}
 	}
 
 	// ---------------------------------------------------------------- connect
@@ -135,8 +140,10 @@ public class RedisSMQ {
 	 */
 	public void quit() {
 		try {
-			this.jedisPool.close();
-			this.jedisPool.destroy();
+			if (this.jedisPool != null) {
+				this.jedisPool.close();
+				this.jedisPool.destroy();
+			}
 		}
 		catch (Exception ex) {
 			// ignore
