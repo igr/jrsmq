@@ -32,7 +32,7 @@ public class RedisSMQ {
 			poolConfig.setMaxIdle(128);
 			poolConfig.setMaxTotal(128);
 			jedisPool = new JedisPool(
-					poolConfig, config.host(), config.port(), config.timeout(), config.password(), config.database(), null);
+					poolConfig, config.host(), config.port(), config.timeout(), config.password(), config.database(), null, config.ssl());
 			initScript(jedisPool.getResource());
 		} catch (final Exception e) {
 			quit();
