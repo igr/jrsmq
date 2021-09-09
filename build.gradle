@@ -1,4 +1,8 @@
 plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'jacoco'
     id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
@@ -7,18 +11,15 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'signing'
-apply plugin: 'jacoco'
-apply plugin: 'maven-publish'
-apply plugin: 'io.codearte.nexus-staging'
-
 group = 'com.oblac'
 version = '1.3.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
+}
 
 rootProject.description = 'A lightweight message queue for Java that requires no dedicated queue server.'
 
@@ -28,20 +29,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
 
@@ -79,53 +70,20 @@ jacocoTestReport {
 
 ext.admin = hasProperty('sonatypeUsername')
 
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
-signing {
-    required { admin }
-    sign configurations.archives
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
 
-            customizePom(pom, rootProject)
-
-            artifact sourcesJar
-            artifact javadocJar
-
-            if (admin) {
-                // sign the pom
-                pom.withXml {
-                    def pomFile = file("${project.buildDir}/generated-pom.xml")
-                    writeTo(pomFile)
-                    def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-                    artifact(pomAscFile) {
-                        classifier = null
-                        extension = 'pom.asc'
-                    }
-                    pomFile.delete()
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
                 }
-
-                // sign the artifacts
-                project.tasks.signArchives.signatureFiles.each {
-                    artifact(it) {
-                        def matcher = it.file =~ /-(sources|javadoc|jre9)\.jar\.asc$/
-                        if (matcher.find()) {
-                            classifier = matcher.group(1)
-                        } else {
-                            classifier = null
-                        }
-                        extension = 'jar.asc'
-                    }
+                usage('java-runtime') {
+                    fromResolutionResult()
                 }
             }
+            customizePom(pom, rootProject)
         }
     }
     repositories {
@@ -141,22 +99,6 @@ publishing {
     }
 }
 
-model {
-    tasks.publishMavenJavaPublicationToMavenLocal {
-        dependsOn(project.tasks.signArchives)
-    }
-    tasks.publishMavenJavaPublicationToMavenRepository {
-        dependsOn(project.tasks.signArchives)
-    }
-    tasks.publish {
-        dependsOn(project.tasks.build)
-    }
-    tasks.install {
-        dependsOn(project.tasks.build)
-    }
-}
-
-
 def customizePom(pom, gradleProject) {
     pom.withXml {
         def root = asNode()
@@ -167,26 +109,26 @@ def customizePom(pom, gradleProject) {
 
             name 'JRSMQ'
             description gradleProject.description
-            url 'https://githu.com/igr/repo-url-parser'
+            url 'https://githu.com/igr/jrsmq'
             organization {
                 name 'Oblac'
                 url 'https://oblac.com'
             }
             issueManagement {
                 system 'GitHub'
-                url 'https://github.com/igr/repo-url-parser/issues'
+                url 'https://github.com/igr/jrsmq/issues'
             }
             licenses {
                 license {
                     name 'The New BSD License'
-                    url 'https://github.com/igr/repo-url-parser/blob/master/LICENSE'
+                    url 'https://github.com/igr/jrsmq/blob/master/LICENSE'
                     distribution 'repo'
                 }
             }
             scm {
-                url 'https://github.com/igr/repo-url-parser'
-                connection 'scm:git:git://github.com/igr/repo-url-parser.git'
-                developerConnection 'scm:git:ssh://git@github.com/igr/repo-url-parser.git'
+                url 'https://github.com/igr/jrsmq'
+                connection 'scm:git:git://github.com/igr/jrsmq.git'
+                developerConnection 'scm:git:ssh://git@github.com/igr/jrsmq.git'
             }
             developers {
                 developer {
@@ -198,6 +140,11 @@ def customizePom(pom, gradleProject) {
             }
         }
     }
+}
+
+signing {
+    required { admin }
+    sign publishing.publications.mavenJava
 }
 
 task install(dependsOn: publishToMavenLocal) {
