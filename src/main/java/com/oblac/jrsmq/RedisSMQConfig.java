@@ -14,12 +14,14 @@ public class RedisSMQConfig {
 	private String ns;
 	private String password;
 	private String redisns;
+	private boolean ssl;
 
 	public RedisSMQConfig() {
 		host("localhost");
 		port(6379);
 		timeout(5000);
 		ns("rsmq");
+		ssl(false);
 	}
 
 	/**
@@ -109,6 +111,18 @@ public class RedisSMQConfig {
 	public RedisSMQConfig ns(String ns) {
 		this.ns = ns;
 		this.redisns = ns + ':';
+		return this;
+	}
+
+	public boolean ssl() {
+		return ssl;
+	}
+
+	/**
+	 * Sets redis server ssl.
+	 */
+	public RedisSMQConfig ssl(boolean ssl) {
+		this.ssl = ssl;
 		return this;
 	}
 }
