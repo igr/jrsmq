@@ -8,7 +8,7 @@ Java implementation of https://github.com/smrchy/rsmq.
 
 ## Version
 
-	com.oblac:jrsmq:1.2.1
+	com.oblac:jrsmq:1.3.0
 
 ## Java implementation notes
 
