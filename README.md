@@ -1,5 +1,7 @@
 ![RSMQ: Redis Simple Message Queue for Node.js](https://img.webmart.de/rsmq_wide.png)
 
+![](https://app.travis-ci.com/igr/jrsmq.svg?branch=master)
+
 # Redis Simple Message Queue
 
 A lightweight message queue for Java that requires no dedicated queue server. Just a Redis server.
