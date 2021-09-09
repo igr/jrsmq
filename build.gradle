@@ -1,5 +1,5 @@
 plugins {
-    id 'io.codearte.nexus-staging' version '0.11.0'
+    id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
 repositories {
@@ -23,7 +23,7 @@ targetCompatibility = 1.8
 rootProject.description = 'A lightweight message queue for Java that requires no dedicated queue server.'
 
 dependencies {
-    compile "redis.clients:jedis:2.10.2"
+    implementation 'redis.clients:jedis:2.10.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
@@ -222,12 +222,3 @@ task release() {
 // ADDON
 //
 apply from: "redis.gradle"
-
-
-//
-// WRAPPER
-//
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '4.6'
-}
